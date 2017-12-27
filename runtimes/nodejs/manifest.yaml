@@ -30,7 +30,7 @@ packages:
       triggers:
           # Trigger named "data-inserted-trigger"
           # Creating trigger to fire events when data is inserted into database
-          $TRIGGER_NAME:
+          data-inserted-trigger:
               source: openwhisk-cloudant/changes
               inputs:
                   dbname: $CLOUDANT_DATABASE
