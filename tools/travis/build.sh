@@ -53,5 +53,5 @@ cd $DEPLOYDIR/packages
 source $DEPLOYDIR/packages/installCatalog.sh $AUTH_KEY $EDGE_HOST $WSK_CLI
 
 # Test
-cd $ROOTDIR/blueprint-cloudant-trigger
+cd $ROOTDIR/template-cloudant-trigger
 ./gradlew :tests:test
