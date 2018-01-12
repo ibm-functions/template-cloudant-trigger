@@ -40,10 +40,10 @@ class CloudantTests extends TestHelpers
     val phpfolder = "../runtimes/php/actions";
     val pythonfolder = "../runtimes/python/actions";
     val swiftfolder = "../runtimes/swift/actions";
-    behavior of "Cloudant Trigger Blueprint"
+    behavior of "Cloudant Trigger Template"
 
     /**
-     * Test the nodejs "cloudant trigger" blueprint
+     * Test the nodejs "cloudant trigger" template
      */
      it should "invoke process-change.js and get the result" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
        println(System.getProperty("user.dir"));
@@ -78,7 +78,7 @@ class CloudantTests extends TestHelpers
     }
 
   /**
-    * Test the python "cloudant trigger" blueprint
+    * Test the python "cloudant trigger" template
     */
   it should "invoke process-change.py and get the result" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
 
@@ -111,7 +111,7 @@ class CloudantTests extends TestHelpers
   }
 
   /**
-    * Test the php "cloudant trigger" blueprint
+    * Test the php "cloudant trigger" template
     */
   it should "invoke process-change.php and get the result" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
 
@@ -144,7 +144,7 @@ class CloudantTests extends TestHelpers
   }
 
   /**
-    * Test the swift "cloudant trigger" blueprint
+    * Test the swift "cloudant trigger" template
     */
   it should "invoke process-change.swift and get the result" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
 
