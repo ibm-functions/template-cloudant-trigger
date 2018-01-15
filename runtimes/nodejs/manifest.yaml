@@ -30,7 +30,7 @@ packages:
       triggers:
           # Trigger named "data-inserted-trigger"
           # Creating trigger to fire events when data is inserted into database
-          data-inserted-trigger:
+          $TRIGGER_NAME:
               feed: openwhisk-cloudant/changes
               inputs:
                   dbname: $CLOUDANT_DATABASE
@@ -49,5 +49,5 @@ packages:
           # Rule named "log-change-rule"
           # Creating rule that maps database change trigger to sequence
           log-change-rule:
-              trigger: data-inserted-trigger
+              trigger: $TRIGGER_NAME
               action: process-change-cloudant-sequence
