@@ -51,3 +51,4 @@ packages:
           log-change-rule:
               trigger: $TRIGGER_NAME
               action: process-change-cloudant-sequence
+              status: active
