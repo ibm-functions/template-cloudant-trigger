@@ -1,4 +1,5 @@
-function main({name, color}) {
+function main(params) {
+  let {name, color} = params
   return new Promise(function(resolve, reject) {
     if (!name || !color) {
       reject({
