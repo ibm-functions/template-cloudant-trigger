@@ -36,20 +36,21 @@ class CloudantTests extends TestHelpers
     val wsk = new Wsk()
 
     //set parameters for deploy tests
-    val nodejsfolder = "../runtimes/nodejs/actions";
-    val phpfolder = "../runtimes/php/actions";
-    val pythonfolder = "../runtimes/python/actions";
-    val swiftfolder = "../runtimes/swift/actions";
+    val nodejs8folder = "../runtimes/nodejs-8/actions";
+    val nodejs6folder = "../runtimes/nodejs-6/actions";
+    val phpfolder = "../runtimes/php-7.1/actions";
+    val pythonfolder = "../runtimes/python-3/actions";
+    val swiftfolder = "../runtimes/swift-3.1.1/actions";
     behavior of "Cloudant Trigger Template"
 
     /**
-     * Test the nodejs "cloudant trigger" template
+     * Test the nodejs 8 "cloudant trigger" template
      */
      it should "invoke process-change.js and get the result" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
        println(System.getProperty("user.dir"));
 
        val name = "cloudantNode"
-       val file = Some(new File(nodejsfolder, "process-change.js").toString());
+       val file = Some(new File(nodejs8folder, "process-change.js").toString());
        assetHelper.withCleaner(wsk.action, name) { (action, _) =>
          action.create(name, file)
        }
@@ -64,7 +65,41 @@ class CloudantTests extends TestHelpers
     it should "invoke process-change.js without parameters and get an error" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
 
       val name = "cloudantNode"
-      val file = Some(new File(nodejsfolder, "process-change.js").toString());
+      val file = Some(new File(nodejs8folder, "process-change.js").toString());
+
+      assetHelper.withCleaner(wsk.action, name) { (action, _) =>
+        action.create(name, file)
+      }
+
+      withActivation(wsk.activation, wsk.action.invoke(name)) {
+        activation =>
+          activation.response.success shouldBe false
+          activation.response.result.get.toString should include("Please make sure name and color are passed in as params.")
+      }
+    }
+    /**
+     * Test the nodejs 6 "cloudant trigger" template
+     */
+     it should "invoke process-change.js and get the result" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
+       println(System.getProperty("user.dir"));
+
+       val name = "cloudantNode"
+       val file = Some(new File(nodejs6folder, "process-change.js").toString());
+       assetHelper.withCleaner(wsk.action, name) { (action, _) =>
+         action.create(name, file)
+       }
+
+       val params = Map("color" -> "Red", "name" -> "Kat").mapValues(_.toJson)
+
+       withActivation(wsk.activation, wsk.action.invoke(name, params)) {
+         _.response.result.get.toString should include("A Red cat named Kat was added")
+       }
+     }
+
+    it should "invoke process-change.js without parameters and get an error" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
+
+      val name = "cloudantNode"
+      val file = Some(new File(nodejs6folder, "process-change.js").toString());
 
       assetHelper.withCleaner(wsk.action, name) { (action, _) =>
         action.create(name, file)
