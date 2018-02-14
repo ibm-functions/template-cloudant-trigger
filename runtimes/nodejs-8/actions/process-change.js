@@ -1,18 +1,17 @@
 function main(params) {
-  let {name, color} = params
-  return new Promise(function(resolve, reject) {
+  const { name, color } = params;
+  return new Promise((resolve, reject) => {
     if (!name || !color) {
       reject({
-        'error': 'Please make sure name and color are passed in as params.'
+        error: 'Please make sure name and color are passed in as params.'
       });
-      return;
     } else {
-      var message = 'A ' + color + ' cat named ' + name + ' was added.';
+      const message = `A ${color} cat named ${name} was added`;
       console.log(message);
       resolve({
-        change: message
+        change: message,
       });
-      return;
     }
   });
 }
+exports.main = main;
