@@ -46,7 +46,7 @@ class CloudantTests extends TestHelpers
     /**
      * Test the nodejs 8 "cloudant trigger" template
      */
-     it should "invoke process-change.js and get the result" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
+     it should "invoke nodejs 8 process-change.js and get the result" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
        println(System.getProperty("user.dir"));
 
        val name = "cloudantNode"
@@ -62,7 +62,7 @@ class CloudantTests extends TestHelpers
        }
      }
 
-    it should "invoke process-change.js without parameters and get an error" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
+    it should "invoke nodejs 8 process-change.js without parameters and get an error" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
 
       val name = "cloudantNode"
       val file = Some(new File(nodejs8folder, "process-change.js").toString());
@@ -80,7 +80,7 @@ class CloudantTests extends TestHelpers
     /**
      * Test the nodejs 6 "cloudant trigger" template
      */
-     it should "invoke process-change.js and get the result" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
+     it should "invoke nodejs 6 process-change.js and get the result" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
        println(System.getProperty("user.dir"));
 
        val name = "cloudantNode"
@@ -96,7 +96,7 @@ class CloudantTests extends TestHelpers
        }
      }
 
-    it should "invoke process-change.js without parameters and get an error" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
+    it should "invoke nodejs 6 process-change.js without parameters and get an error" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
 
       val name = "cloudantNode"
       val file = Some(new File(nodejs6folder, "process-change.js").toString());
