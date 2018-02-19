@@ -39,7 +39,7 @@ packages:
           # Creating action that is printing data which is written to the database
           process-change:
               function: actions/process-change.py
-              runtime: python:3
+              runtime: python-jessie:3
 
       sequences:
           # Sequence named "process-change-cloudant-sequence"
