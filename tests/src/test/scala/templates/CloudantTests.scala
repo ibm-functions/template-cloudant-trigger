@@ -50,9 +50,10 @@ class CloudantTests extends TestHelpers
        println(System.getProperty("user.dir"));
 
        val name = "cloudantNode"
+       val kind = Option("nodejs:8")
        val file = Some(new File(nodejs8folder, "process-change.js").toString());
        assetHelper.withCleaner(wsk.action, name) { (action, _) =>
-         action.create(name, file)
+         action.create(name, file, kind)
        }
 
        val params = Map("color" -> "Red", "name" -> "Kat").mapValues(_.toJson)
@@ -65,10 +66,11 @@ class CloudantTests extends TestHelpers
     it should "invoke nodejs 8 process-change.js without parameters and get an error" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
 
       val name = "cloudantNode"
+      val kind = Option("nodejs:8")
       val file = Some(new File(nodejs8folder, "process-change.js").toString());
 
       assetHelper.withCleaner(wsk.action, name) { (action, _) =>
-        action.create(name, file)
+        action.create(name, file, kind)
       }
 
       withActivation(wsk.activation, wsk.action.invoke(name)) {
