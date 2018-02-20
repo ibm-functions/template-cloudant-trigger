@@ -1,5 +1,4 @@
 function main(params) {
-
   return new Promise(function(resolve, reject) {
     if (!params.name || !params.color) {
       reject({
