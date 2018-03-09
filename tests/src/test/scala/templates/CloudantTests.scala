@@ -100,7 +100,7 @@ class CloudantTests extends TestHelpers
       ), successStatus, 200);
 
       withActivation(wsk.activation, wsk.action.invoke(slackReminderActionPackage)) {
-        _.response.result.get.toString should include("Your scrum is starting now.  Time to find your team!")
+        _.response.result.get.toString should include("Please make sure name and color are passed in as params.")
       }
 
       withActivation(wsk.activation, wsk.action.invoke(fakeChangesAction, Map("message" -> "echo".toJson))) {
@@ -109,6 +109,134 @@ class CloudantTests extends TestHelpers
 
       val action = wsk.action.get("myPackage/send-message")
       verifyAction(action, slackReminderActionPackage, nodejs8kind)
+
+      // clean up after test
+      wsk.action.delete(slackReminderActionPackage)
+    }
+
+    // test to create the nodejs 6 cloudant trigger template from github url.  Will use preinstalled folder.
+    it should "create the nodejs 6 cloudant trigger action from github url" in {
+      makePostCallWithExpectedResult(JsObject(
+        "gitUrl" -> JsString(deployTestRepo),
+        "manifestPath" -> JsString(node8RuntimePath),
+        "envData" -> JsObject(
+            "PACKAGE_NAME" -> JsString("myPackage"),
+            "CLOUDANT_USERNAME" -> JsString("username"),
+            "CLOUDANT_PASSWORD" -> JsString("password"),
+            "CLOUDANT_HOSTNAME" -> JsString("hostname"),
+            "TRIGGER_NAME" -> JsString("myTrigger"),
+            "RULE_NAME" -> JsString("myRule")
+        ),
+        "wskApiHost" -> JsString(wskprops.apihost),
+        "wskAuth" -> JsString(wskprops.authKey)
+      ), successStatus, 200);
+
+      withActivation(wsk.activation, wsk.action.invoke(slackReminderActionPackage)) {
+        _.response.result.get.toString should include("Please make sure name and color are passed in as params.")
+      }
+
+      withActivation(wsk.activation, wsk.action.invoke(fakeChangesAction, Map("message" -> "echo".toJson))) {
+        _.response.result.get.toString should include("echo")
+      }
+
+      val action = wsk.action.get("myPackage/send-message")
+      verifyAction(action, slackReminderActionPackage, nodejs6kind)
+
+      // clean up after test
+      wsk.action.delete(slackReminderActionPackage)
+    }
+
+    // test to create the php cloudant trigger template from github url.  Will use preinstalled folder.
+    it should "create the php cloudant trigger action from github url" in {
+      makePostCallWithExpectedResult(JsObject(
+        "gitUrl" -> JsString(deployTestRepo),
+        "manifestPath" -> JsString(phpRuntimePath),
+        "envData" -> JsObject(
+            "PACKAGE_NAME" -> JsString("myPackage"),
+            "CLOUDANT_USERNAME" -> JsString("username"),
+            "CLOUDANT_PASSWORD" -> JsString("password"),
+            "CLOUDANT_HOSTNAME" -> JsString("hostname"),
+            "TRIGGER_NAME" -> JsString("myTrigger"),
+            "RULE_NAME" -> JsString("myRule")
+        ),
+        "wskApiHost" -> JsString(wskprops.apihost),
+        "wskAuth" -> JsString(wskprops.authKey)
+      ), successStatus, 200);
+
+      withActivation(wsk.activation, wsk.action.invoke(slackReminderActionPackage)) {
+        _.response.result.get.toString should include("Please make sure name and color are passed in as params.")
+      }
+
+      withActivation(wsk.activation, wsk.action.invoke(fakeChangesAction, Map("message" -> "echo".toJson))) {
+        _.response.result.get.toString should include("echo")
+      }
+
+      val action = wsk.action.get("myPackage/send-message")
+      verifyAction(action, slackReminderActionPackage, phpkind)
+
+      // clean up after test
+      wsk.action.delete(slackReminderActionPackage)
+    }
+
+    // test to create the python cloudant trigger template from github url.  Will use preinstalled folder.
+    it should "create the python cloudant trigger action from github url" in {
+      makePostCallWithExpectedResult(JsObject(
+        "gitUrl" -> JsString(deployTestRepo),
+        "manifestPath" -> JsString(pythonRuntimePath),
+        "envData" -> JsObject(
+            "PACKAGE_NAME" -> JsString("myPackage"),
+            "CLOUDANT_USERNAME" -> JsString("username"),
+            "CLOUDANT_PASSWORD" -> JsString("password"),
+            "CLOUDANT_HOSTNAME" -> JsString("hostname"),
+            "TRIGGER_NAME" -> JsString("myTrigger"),
+            "RULE_NAME" -> JsString("myRule")
+        ),
+        "wskApiHost" -> JsString(wskprops.apihost),
+        "wskAuth" -> JsString(wskprops.authKey)
+      ), successStatus, 200);
+
+      withActivation(wsk.activation, wsk.action.invoke(slackReminderActionPackage)) {
+        _.response.result.get.toString should include("Please make sure name and color are passed in as params.")
+      }
+
+      withActivation(wsk.activation, wsk.action.invoke(fakeChangesAction, Map("message" -> "echo".toJson))) {
+        _.response.result.get.toString should include("echo")
+      }
+
+      val action = wsk.action.get("myPackage/send-message")
+      verifyAction(action, slackReminderActionPackage, pythonkind)
+
+      // clean up after test
+      wsk.action.delete(slackReminderActionPackage)
+    }
+
+    // test to create the swift cloudant trigger template from github url.  Will use preinstalled folder.
+    it should "create the swift cloudant trigger action from github url" in {
+      makePostCallWithExpectedResult(JsObject(
+        "gitUrl" -> JsString(deployTestRepo),
+        "manifestPath" -> JsString(swiftRuntimePath),
+        "envData" -> JsObject(
+            "PACKAGE_NAME" -> JsString("myPackage"),
+            "CLOUDANT_USERNAME" -> JsString("username"),
+            "CLOUDANT_PASSWORD" -> JsString("password"),
+            "CLOUDANT_HOSTNAME" -> JsString("hostname"),
+            "TRIGGER_NAME" -> JsString("myTrigger"),
+            "RULE_NAME" -> JsString("myRule")
+        ),
+        "wskApiHost" -> JsString(wskprops.apihost),
+        "wskAuth" -> JsString(wskprops.authKey)
+      ), successStatus, 200);
+
+      withActivation(wsk.activation, wsk.action.invoke(slackReminderActionPackage)) {
+        _.response.result.get.toString should include("Please make sure name and color are passed in as params.")
+      }
+
+      withActivation(wsk.activation, wsk.action.invoke(fakeChangesAction, Map("message" -> "echo".toJson))) {
+        _.response.result.get.toString should include("echo")
+      }
+
+      val action = wsk.action.get("myPackage/send-message")
+      verifyAction(action, slackReminderActionPackage, swiftkind)
 
       // clean up after test
       wsk.action.delete(slackReminderActionPackage)
