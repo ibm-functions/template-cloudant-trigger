@@ -48,7 +48,7 @@ export OPENWHISK_HOME=$WHISKDIR
 mkdir -p $PACKAGESDIR/preInstalled/ibm-functions
 cp -r $ROOTDIR/template-cloudant-trigger $PACKAGESDIR/preInstalled/ibm-functions/
 
-# Install the package
+# Install the deploy package
 cd $PACKAGESDIR/packageDeploy/packages
 source $PACKAGESDIR/packageDeploy/packages/installCatalog.sh $AUTH_KEY $EDGE_HOST $WSK_CLI
 
