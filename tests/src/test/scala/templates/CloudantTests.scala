@@ -41,7 +41,7 @@ class CloudantTests extends TestHelpers
     val successStatus = """"status":"success""""
 
     val deployTestRepo = "https://github.com/ibm-functions/template-cloudant-trigger"
-    val slackReminderActionPackage = "myPackage/process-change"
+    val cloudantActionPackage = "myPackage/process-change"
     val fakeChangesAction = "openwhisk-cloudant/changes"
     val deployAction = "/whisk.system/deployWeb/wskdeploy"
     val deployActionURL = s"https://${wskprops.apihost}/api/v1/web${deployAction}.http"
@@ -100,7 +100,7 @@ class CloudantTests extends TestHelpers
         "wskAuth" -> JsString(wskprops.authKey)
       ), successStatus, 200);
 
-      withActivation(wsk.activation, wsk.action.invoke(slackReminderActionPackage)) {
+      withActivation(wsk.activation, wsk.action.invoke(cloudantActionPackage)) {
         _.response.result.get.toString should include("Please make sure name and color are passed in as params.")
       }
 
@@ -109,10 +109,10 @@ class CloudantTests extends TestHelpers
       }
 
       val action = wsk.action.get("myPackage/process-change")
-      verifyAction(action, slackReminderActionPackage, nodejs8kind)
+      verifyAction(action, cloudantActionPackage, nodejs8kind)
 
       // clean up after test
-      wsk.action.delete(slackReminderActionPackage)
+      wsk.action.delete(cloudantActionPackage)
     }
 
     // test to create the nodejs 6 cloudant trigger template from github url.  Will use preinstalled folder.
@@ -133,7 +133,7 @@ class CloudantTests extends TestHelpers
         "wskAuth" -> JsString(wskprops.authKey)
       ), successStatus, 200);
 
-      withActivation(wsk.activation, wsk.action.invoke(slackReminderActionPackage)) {
+      withActivation(wsk.activation, wsk.action.invoke(cloudantActionPackage)) {
         _.response.result.get.toString should include("Please make sure name and color are passed in as params.")
       }
 
@@ -142,10 +142,10 @@ class CloudantTests extends TestHelpers
       }
 
       val action = wsk.action.get("myPackage/process-change")
-      verifyAction(action, slackReminderActionPackage, nodejs6kind)
+      verifyAction(action, cloudantActionPackage, nodejs6kind)
 
       // clean up after test
-      wsk.action.delete(slackReminderActionPackage)
+      wsk.action.delete(cloudantActionPackage)
     }
 
     // test to create the php cloudant trigger template from github url.  Will use preinstalled folder.
@@ -166,7 +166,7 @@ class CloudantTests extends TestHelpers
         "wskAuth" -> JsString(wskprops.authKey)
       ), successStatus, 200);
 
-      withActivation(wsk.activation, wsk.action.invoke(slackReminderActionPackage)) {
+      withActivation(wsk.activation, wsk.action.invoke(cloudantActionPackage)) {
         _.response.result.get.toString should include("Please make sure name and color are passed in as params.")
       }
 
@@ -175,10 +175,10 @@ class CloudantTests extends TestHelpers
       }
 
       val action = wsk.action.get("myPackage/process-change")
-      verifyAction(action, slackReminderActionPackage, phpkind)
+      verifyAction(action, cloudantActionPackage, phpkind)
 
       // clean up after test
-      wsk.action.delete(slackReminderActionPackage)
+      wsk.action.delete(cloudantActionPackage)
     }
 
     // test to create the python cloudant trigger template from github url.  Will use preinstalled folder.
@@ -199,7 +199,7 @@ class CloudantTests extends TestHelpers
         "wskAuth" -> JsString(wskprops.authKey)
       ), successStatus, 200);
 
-      withActivation(wsk.activation, wsk.action.invoke(slackReminderActionPackage)) {
+      withActivation(wsk.activation, wsk.action.invoke(cloudantActionPackage)) {
         _.response.result.get.toString should include("Please make sure name and color are passed in as params.")
       }
 
@@ -208,10 +208,10 @@ class CloudantTests extends TestHelpers
       }
 
       val action = wsk.action.get("myPackage/process-change")
-      verifyAction(action, slackReminderActionPackage, pythonkind)
+      verifyAction(action, cloudantActionPackage, pythonkind)
 
       // clean up after test
-      wsk.action.delete(slackReminderActionPackage)
+      wsk.action.delete(cloudantActionPackage)
     }
 
     // test to create the swift cloudant trigger template from github url.  Will use preinstalled folder.
@@ -232,7 +232,7 @@ class CloudantTests extends TestHelpers
         "wskAuth" -> JsString(wskprops.authKey)
       ), successStatus, 200);
 
-      withActivation(wsk.activation, wsk.action.invoke(slackReminderActionPackage)) {
+      withActivation(wsk.activation, wsk.action.invoke(cloudantActionPackage)) {
         _.response.result.get.toString should include("Please make sure name and color are passed in as params.")
       }
 
@@ -241,10 +241,10 @@ class CloudantTests extends TestHelpers
       }
 
       val action = wsk.action.get("myPackage/process-change")
-      verifyAction(action, slackReminderActionPackage, swiftkind)
+      verifyAction(action, cloudantActionPackage, swiftkind)
 
       // clean up after test
-      wsk.action.delete(slackReminderActionPackage)
+      wsk.action.delete(cloudantActionPackage)
     }
 
     /**
