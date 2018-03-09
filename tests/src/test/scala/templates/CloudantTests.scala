@@ -107,7 +107,7 @@ class CloudantTests extends TestHelpers
         _.response.result.get.toString should include("echo")
       }
 
-      val action = wsk.action.get("myPackage/send-message")
+      val action = wsk.action.get("myPackage/process-change")
       verifyAction(action, slackReminderActionPackage, nodejs8kind)
 
       // clean up after test
@@ -139,7 +139,7 @@ class CloudantTests extends TestHelpers
         _.response.result.get.toString should include("echo")
       }
 
-      val action = wsk.action.get("myPackage/send-message")
+      val action = wsk.action.get("myPackage/process-change")
       verifyAction(action, slackReminderActionPackage, nodejs6kind)
 
       // clean up after test
@@ -171,7 +171,7 @@ class CloudantTests extends TestHelpers
         _.response.result.get.toString should include("echo")
       }
 
-      val action = wsk.action.get("myPackage/send-message")
+      val action = wsk.action.get("myPackage/process-change")
       verifyAction(action, slackReminderActionPackage, phpkind)
 
       // clean up after test
@@ -203,7 +203,7 @@ class CloudantTests extends TestHelpers
         _.response.result.get.toString should include("echo")
       }
 
-      val action = wsk.action.get("myPackage/send-message")
+      val action = wsk.action.get("myPackage/process-change")
       verifyAction(action, slackReminderActionPackage, pythonkind)
 
       // clean up after test
@@ -235,7 +235,7 @@ class CloudantTests extends TestHelpers
         _.response.result.get.toString should include("echo")
       }
 
-      val action = wsk.action.get("myPackage/send-message")
+      val action = wsk.action.get("myPackage/process-change")
       verifyAction(action, slackReminderActionPackage, swiftkind)
 
       // clean up after test
