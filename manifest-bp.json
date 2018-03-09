@@ -1,6 +1,6 @@
 {
   "_comment": "This file is not used, but represents data stored in UI for templates",
-  "id": 0,
+  "id": 1,
   "name": "Cloudant Events",
   "description": "When a Cloudant DB has a document edited or added, log the change in the console.",
   "long_description": "This Template will create a sequence of actions, and a trigger that will kick off that sequence. The trigger is fired when there is a change in the connected Cloudant DB, which should be a database of cats, each with a name and a color defined. When a new cat is added to the database, or a current cat edited, the data will be logged to the console.",
