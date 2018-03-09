@@ -1,17 +1,39 @@
 {
-  "_id": "d8cf3281dabeab2946d55276beb13020",
-  "_rev": "7-6bd988c10a1ff8c04b5700b5d800c275",
-  "name": "New Cloudant Item",
-  "description": "When a cloudant DB has a data item edited or added, log the change in the console.",
-  "long_description": "This template will create a sequence of actions, and a trigger that will kick off that sequence.  The trigger is fired when there is a change in the connected Cloudant DB, which should be a database of cats, with a name and a color.  The expected data item is a cat, with a name and a color defined.  When a new cat is added to the database, or a current cat edited, the data will be logged to the console.",
+  "_comment": "This file is not used, but represents data stored in UI for templates",
+  "id": 0,
+  "name": "Cloudant Events",
+  "description": "When a Cloudant DB has a document edited or added, log the change in the console.",
+  "long_description": "This Template will create a sequence of actions, and a trigger that will kick off that sequence. The trigger is fired when there is a change in the connected Cloudant DB, which should be a database of cats, each with a name and a color defined. When a new cat is added to the database, or a current cat edited, the data will be logged to the console.",
   "url": "https://github.com/ibm-functions/template-cloudant-trigger",
-  "runtime": {
-    "name": "Node.js 6",
-    "kind": "nodejs:6",
-    "type": "nodejs"
-  },
+  "commit": "efee4230ea843a2adbb6cf5ae06effc530d6e6c3",
+  "runtimes": [
+    {
+      "name": "Node.js 8",
+      "kind": "nodejs:8",
+      "type": "nodejs",
+    },
+    {
+      "name": "Node.js 6",
+      "kind": "nodejs:6",
+      "type": "nodejs-6",
+    },
+    {
+      "name": "Swift 3.1.1",
+      "kind": "swift:3.1.1",
+      "type": "swift",
+    },
+    {
+      "name": "Python 3.6.4",
+      "kind": "python-jessie:3",
+      "type": "python",
+    },
+    {
+      "name": "PHP 7.1",
+      "kind": "php:7.1",
+      "type": "php",
+    },
+  ],
   "categories": [
-    "nodejs",
-    "cloudant"
+    "cloudant",
   ]
 }
