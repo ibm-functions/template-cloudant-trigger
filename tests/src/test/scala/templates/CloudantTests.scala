@@ -91,6 +91,7 @@ class CloudantTests extends TestHelpers
             "PACKAGE_NAME" -> JsString("myPackage"),
             "CLOUDANT_USERNAME" -> JsString("username"),
             "CLOUDANT_PASSWORD" -> JsString("password"),
+            "CLOUDANT_DATABASE" -> JsString("database"),
             "CLOUDANT_HOSTNAME" -> JsString("hostname"),
             "TRIGGER_NAME" -> JsString("myTrigger"),
             "RULE_NAME" -> JsString("myRule")
@@ -123,6 +124,7 @@ class CloudantTests extends TestHelpers
             "PACKAGE_NAME" -> JsString("myPackage"),
             "CLOUDANT_USERNAME" -> JsString("username"),
             "CLOUDANT_PASSWORD" -> JsString("password"),
+            "CLOUDANT_DATABASE" -> JsString("database"),
             "CLOUDANT_HOSTNAME" -> JsString("hostname"),
             "TRIGGER_NAME" -> JsString("myTrigger"),
             "RULE_NAME" -> JsString("myRule")
@@ -155,6 +157,7 @@ class CloudantTests extends TestHelpers
             "PACKAGE_NAME" -> JsString("myPackage"),
             "CLOUDANT_USERNAME" -> JsString("username"),
             "CLOUDANT_PASSWORD" -> JsString("password"),
+            "CLOUDANT_DATABASE" -> JsString("database"),
             "CLOUDANT_HOSTNAME" -> JsString("hostname"),
             "TRIGGER_NAME" -> JsString("myTrigger"),
             "RULE_NAME" -> JsString("myRule")
@@ -187,6 +190,7 @@ class CloudantTests extends TestHelpers
             "PACKAGE_NAME" -> JsString("myPackage"),
             "CLOUDANT_USERNAME" -> JsString("username"),
             "CLOUDANT_PASSWORD" -> JsString("password"),
+            "CLOUDANT_DATABASE" -> JsString("database"),
             "CLOUDANT_HOSTNAME" -> JsString("hostname"),
             "TRIGGER_NAME" -> JsString("myTrigger"),
             "RULE_NAME" -> JsString("myRule")
@@ -219,6 +223,7 @@ class CloudantTests extends TestHelpers
             "PACKAGE_NAME" -> JsString("myPackage"),
             "CLOUDANT_USERNAME" -> JsString("username"),
             "CLOUDANT_PASSWORD" -> JsString("password"),
+            "CLOUDANT_DATABASE" -> JsString("database"),
             "CLOUDANT_HOSTNAME" -> JsString("hostname"),
             "TRIGGER_NAME" -> JsString("myTrigger"),
             "RULE_NAME" -> JsString("myRule")
