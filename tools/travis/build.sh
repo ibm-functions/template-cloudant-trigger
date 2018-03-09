@@ -59,6 +59,7 @@ source $PACKAGESDIR/packageDeploy/packages/installCatalog.sh $AUTH_KEY $EDGE_HOS
 # Install fake cloudant package
 $WSK_CLI package create /whisk.system/cloudant --apihost $EDGE_HOST --auth $AUTH_KEY --shared yes -i
 $WSK_CLI action create /whisk.system/cloudant/changes --copy /whisk.system/utils/echo --apihost $EDGE_HOST --auth $AUTH_KEY -i
+$WSK_CLI action create /whisk.system/cloudant/read --copy /whisk.system/utils/echo --apihost $EDGE_HOST --auth $AUTH_KEY -i
 
 # Test
 cd $ROOTDIR/template-cloudant-trigger
