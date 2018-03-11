@@ -350,7 +350,7 @@ class CloudantTests extends TestHelpers
        val name = "cloudantNode"
        val file = Some(new File(nodejs8folder, "process-change.js").toString());
        assetHelper.withCleaner(wsk.action, name) { (action, _) =>
-         action.create(name, file, kind = Some(nodejs8kind))
+         action.create(name, file, kind = Some("nodejs:8"))
        }
 
        val params = Map("color" -> "Red", "name" -> "Kat").mapValues(_.toJson)
@@ -366,7 +366,7 @@ class CloudantTests extends TestHelpers
       val file = Some(new File(nodejs8folder, "process-change.js").toString());
 
       assetHelper.withCleaner(wsk.action, name) { (action, _) =>
-        action.create(name, file, kind = Some(nodejs8kind))
+        action.create(name, file, kind = Some("nodejs:8"))
       }
 
       withActivation(wsk.activation, wsk.action.invoke(name)) {
@@ -384,7 +384,7 @@ class CloudantTests extends TestHelpers
        val name = "cloudantNode"
        val file = Some(new File(nodejs6folder, "process-change.js").toString());
        assetHelper.withCleaner(wsk.action, name) { (action, _) =>
-         action.create(name, file, kind = Some(nodejs6kind))
+         action.create(name, file, kind = Some("nodejs:6"))
        }
 
        val params = Map("color" -> "Red", "name" -> "Kat").mapValues(_.toJson)
@@ -400,7 +400,7 @@ class CloudantTests extends TestHelpers
       val file = Some(new File(nodejs6folder, "process-change.js").toString());
 
       assetHelper.withCleaner(wsk.action, name) { (action, _) =>
-        action.create(name, file, kind = Some(nodejs6kind))
+        action.create(name, file, kind = Some("nodejs:6"))
       }
 
       withActivation(wsk.activation, wsk.action.invoke(name)) {
@@ -418,7 +418,7 @@ class CloudantTests extends TestHelpers
     val name = "cloudantPython"
     val file = Some(new File(pythonfolder, "process-change.py").toString());
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
-      action.create(name, file, kind = Some(pythonkind))
+      action.create(name, file, kind = Some("python-jessie:3"))
     }
 
     val params = Map("color" -> "Red", "name" -> "Kat").mapValues(_.toJson)
@@ -433,7 +433,7 @@ class CloudantTests extends TestHelpers
     val file = Some(new File(pythonfolder, "process-change.py").toString());
 
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
-      action.create(name, file, kind = Some(pythonkind))
+      action.create(name, file, kind = Some("python-jessie:3"))
     }
 
     withActivation(wsk.activation, wsk.action.invoke(name)) {
@@ -451,7 +451,7 @@ class CloudantTests extends TestHelpers
     val name = "cloudantPhp"
     val file = Some(new File(phpfolder, "process-change.php").toString());
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
-      action.create(name, file, kind = Some(phpkind))
+      action.create(name, file, kind = Some("php:7.1"))
     }
 
     val params = Map("color" -> "Red", "name" -> "Kat").mapValues(_.toJson)
@@ -466,7 +466,7 @@ class CloudantTests extends TestHelpers
     val file = Some(new File(phpfolder, "process-change.php").toString());
 
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
-      action.create(name, file, kind = Some(phpkind))
+      action.create(name, file, kind = Some("php:7.1"))
     }
 
     withActivation(wsk.activation, wsk.action.invoke(name)) {
@@ -484,7 +484,7 @@ class CloudantTests extends TestHelpers
     val name = "cloudantSwift"
     val file = Some(new File(swiftfolder, "process-change.swift").toString());
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
-      action.create(name, file, kind = Some(swiftkind))
+      action.create(name, file, kind = Some("swift:3.1.1"))
     }
 
     val params = Map("color" -> "Red", "name" -> "Kat").mapValues(_.toJson)
@@ -499,7 +499,7 @@ class CloudantTests extends TestHelpers
     val file = Some(new File(swiftfolder, "process-change.swift").toString());
 
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
-      action.create(name, file, kind = Some(swiftkind))
+      action.create(name, file, kind = Some("swift:3.1.1"))
     }
 
     withActivation(wsk.activation, wsk.action.invoke(name)) {
