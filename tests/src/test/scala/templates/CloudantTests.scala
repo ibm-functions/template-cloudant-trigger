@@ -56,19 +56,19 @@ class CloudantTests extends TestHelpers
     //set parameters for deploy tests
     val node8RuntimePath = "runtimes/nodejs"
     val nodejs8folder = "../runtimes/nodejs/actions";
-    val nodejs8kind = JsString("nodejs:8")
+    val nodejs8kind = "nodejs:8"
     val node6RuntimePath = "runtimes/nodejs-6"
     val nodejs6folder = "../runtimes/nodejs-6/actions";
-    val nodejs6kind = JsString("nodejs:6")
+    val nodejs6kind = "nodejs:6"
     val phpRuntimePath = "runtimes/php"
     val phpfolder = "../runtimes/php/actions";
-    val phpkind = JsString("php:7.1")
+    val phpkind = "php:7.1"
     val pythonRuntimePath = "runtimes/python"
     val pythonfolder = "../runtimes/python/actions";
-    val pythonkind = JsString("python-jessie:3")
+    val pythonkind = "python-jessie:3"
     val swiftRuntimePath = "runtimes/swift"
     val swiftfolder = "../runtimes/swift/actions";
-    val swiftkind = JsString("swift:3.1.1")
+    val swiftkind = "swift:3.1.1"
 
     behavior of "Cloudant Trigger Template"
 
@@ -115,7 +115,7 @@ class CloudantTests extends TestHelpers
       }
 
       val action = wsk.action.get("myPackage/process-change")
-      verifyAction(action, cloudantAction, nodejs8kind)
+      verifyAction(action, cloudantAction, JsString(nodejs8kind))
 
       // clean up after test
       wsk.action.delete("myPackage/process-change")
@@ -169,7 +169,7 @@ class CloudantTests extends TestHelpers
       }
 
       val action = wsk.action.get("myPackage/process-change")
-      verifyAction(action, cloudantAction, nodejs6kind)
+      verifyAction(action, cloudantAction, JsString(nodejs6kind))
 
       // clean up after test
       wsk.action.delete("myPackage/process-change")
@@ -223,7 +223,7 @@ class CloudantTests extends TestHelpers
       }
 
       val action = wsk.action.get("myPackage/process-change")
-      verifyAction(action, cloudantAction, phpkind)
+      verifyAction(action, cloudantAction, JsString(phpkind))
 
       // clean up after test
       wsk.action.delete("myPackage/process-change")
@@ -276,7 +276,7 @@ class CloudantTests extends TestHelpers
       }
 
       val action = wsk.action.get("myPackage/process-change")
-      verifyAction(action, cloudantAction, pythonkind)
+      verifyAction(action, cloudantAction, JsString(pythonkind))
 
       // clean up after test
       wsk.action.delete("myPackage/process-change")
@@ -330,7 +330,7 @@ class CloudantTests extends TestHelpers
       }
 
       val action = wsk.action.get("myPackage/process-change")
-      verifyAction(action, cloudantAction, swiftkind)
+      verifyAction(action, cloudantAction, JsString(swiftkind))
 
       // clean up after test
       wsk.action.delete("myPackage/process-change")
@@ -350,7 +350,7 @@ class CloudantTests extends TestHelpers
        val name = "cloudantNode"
        val file = Some(new File(nodejs8folder, "process-change.js").toString());
        assetHelper.withCleaner(wsk.action, name) { (action, _) =>
-         action.create(name, file, kind = Some("nodejs:8"))
+         action.create(name, file, kind = Some(nodejs8kind))
        }
 
        val params = Map("color" -> "Red", "name" -> "Kat").mapValues(_.toJson)
@@ -366,7 +366,7 @@ class CloudantTests extends TestHelpers
       val file = Some(new File(nodejs8folder, "process-change.js").toString());
 
       assetHelper.withCleaner(wsk.action, name) { (action, _) =>
-        action.create(name, file, kind = Some("nodejs:8"))
+        action.create(name, file, kind = Some(nodejs8kind))
       }
 
       withActivation(wsk.activation, wsk.action.invoke(name)) {
@@ -384,7 +384,7 @@ class CloudantTests extends TestHelpers
        val name = "cloudantNode"
        val file = Some(new File(nodejs6folder, "process-change.js").toString());
        assetHelper.withCleaner(wsk.action, name) { (action, _) =>
-         action.create(name, file, kind = Some("nodejs:6"))
+         action.create(name, file, kind = Some(nodejs6kind))
        }
 
        val params = Map("color" -> "Red", "name" -> "Kat").mapValues(_.toJson)
@@ -400,7 +400,7 @@ class CloudantTests extends TestHelpers
       val file = Some(new File(nodejs6folder, "process-change.js").toString());
 
       assetHelper.withCleaner(wsk.action, name) { (action, _) =>
-        action.create(name, file, kind = Some("nodejs:6"))
+        action.create(name, file, kind = Some(nodejs6kind))
       }
 
       withActivation(wsk.activation, wsk.action.invoke(name)) {
@@ -418,7 +418,7 @@ class CloudantTests extends TestHelpers
     val name = "cloudantPython"
     val file = Some(new File(pythonfolder, "process-change.py").toString());
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
-      action.create(name, file, kind = Some("python-jessie:3"))
+      action.create(name, file, kind = Some(pythonkind))
     }
 
     val params = Map("color" -> "Red", "name" -> "Kat").mapValues(_.toJson)
@@ -433,7 +433,7 @@ class CloudantTests extends TestHelpers
     val file = Some(new File(pythonfolder, "process-change.py").toString());
 
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
-      action.create(name, file, kind = Some("python-jessie:3"))
+      action.create(name, file, kind = Some(pythonkind))
     }
 
     withActivation(wsk.activation, wsk.action.invoke(name)) {
@@ -451,7 +451,7 @@ class CloudantTests extends TestHelpers
     val name = "cloudantPhp"
     val file = Some(new File(phpfolder, "process-change.php").toString());
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
-      action.create(name, file, kind = Some("php:7.1"))
+      action.create(name, file, kind = Some(phpkind))
     }
 
     val params = Map("color" -> "Red", "name" -> "Kat").mapValues(_.toJson)
@@ -466,7 +466,7 @@ class CloudantTests extends TestHelpers
     val file = Some(new File(phpfolder, "process-change.php").toString());
 
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
-      action.create(name, file, kind = Some("php:7.1"))
+      action.create(name, file, kind = Some(phpkind))
     }
 
     withActivation(wsk.activation, wsk.action.invoke(name)) {
@@ -484,7 +484,7 @@ class CloudantTests extends TestHelpers
     val name = "cloudantSwift"
     val file = Some(new File(swiftfolder, "process-change.swift").toString());
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
-      action.create(name, file, kind = Some("swift:3.1.1"))
+      action.create(name, file, kind = Some(swiftkind))
     }
 
     val params = Map("color" -> "Red", "name" -> "Kat").mapValues(_.toJson)
@@ -499,7 +499,7 @@ class CloudantTests extends TestHelpers
     val file = Some(new File(swiftfolder, "process-change.swift").toString());
 
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
-      action.create(name, file, kind = Some("swift:3.1.1"))
+      action.create(name, file, kind = Some(swiftkind))
     }
 
     withActivation(wsk.activation, wsk.action.invoke(name)) {
