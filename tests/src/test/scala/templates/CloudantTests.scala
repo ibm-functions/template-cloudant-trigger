@@ -120,6 +120,7 @@ class CloudantTests extends TestHelpers
       // clean up after test
       wsk.action.delete("myPackage/process-change")
       wsk.action.delete("myPackage/process-change-cloudant-sequence")
+      wsk.pkg.delete("openwhisk-cloudant")
       wsk.pkg.delete("myPackage")
       wsk.trigger.delete("myTrigger")
       wsk.rule.delete("myRule")
@@ -174,6 +175,7 @@ class CloudantTests extends TestHelpers
       wsk.action.delete("myPackage/process-change")
       wsk.action.delete("myPackage/process-change-cloudant-sequence")
       wsk.pkg.delete("myPackage")
+      wsk.pkg.delete("openwhisk-cloudant")
       wsk.trigger.delete("myTrigger")
       wsk.rule.delete("myRule")
     }
@@ -227,6 +229,7 @@ class CloudantTests extends TestHelpers
       wsk.action.delete("myPackage/process-change")
       wsk.action.delete("myPackage/process-change-cloudant-sequence")
       wsk.pkg.delete("myPackage")
+      wsk.pkg.delete("openwhisk-cloudant")
       wsk.trigger.delete("myTrigger")
       wsk.rule.delete("myRule")
     }
@@ -279,6 +282,7 @@ class CloudantTests extends TestHelpers
       wsk.action.delete("myPackage/process-change")
       wsk.action.delete("myPackage/process-change-cloudant-sequence")
       wsk.pkg.delete("myPackage")
+      wsk.pkg.delete("openwhisk-cloudant")
       wsk.trigger.delete("myTrigger")
       wsk.rule.delete("myRule")
     }
@@ -332,6 +336,7 @@ class CloudantTests extends TestHelpers
       wsk.action.delete("myPackage/process-change")
       wsk.action.delete("myPackage/process-change-cloudant-sequence")
       wsk.pkg.delete("myPackage")
+      wsk.pkg.delete("openwhisk-cloudant")
       wsk.trigger.delete("myTrigger")
       wsk.rule.delete("myRule")
     }
