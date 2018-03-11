@@ -24,10 +24,15 @@ import org.scalatest.junit.JUnitRunner
 import common.{TestHelpers, Wsk, WskProps, WskTestHelpers}
 import java.io._
 import common.TestUtils.RunResult
+import common.ActivationResult
 import com.jayway.restassured.RestAssured
 import com.jayway.restassured.config.SSLConfig
 import spray.json.DefaultJsonProtocol._
 import spray.json._
+
+import scala.concurrent.duration.DurationInt
+import scala.language.postfixOps
+
 
 @RunWith(classOf[JUnitRunner])
 class CloudantTests extends TestHelpers
@@ -36,12 +41,14 @@ class CloudantTests extends TestHelpers
 
     implicit val wskprops = WskProps()
     val wsk = new Wsk()
+    val allowedActionDuration = 120 seconds
 
     // statuses for deployWeb
     val successStatus = """"status":"success""""
 
     val deployTestRepo = "https://github.com/ibm-functions/template-cloudant-trigger"
-    val cloudantActionPackage = "myPackage/process-change"
+    val cloudantAction = "myPackage/process-change"
+    val cloudantSequence = "myPackage/process-change-cloudant-sequence"
     val fakeChangesAction = "openwhisk-cloudant/changes"
     val deployAction = "/whisk.system/deployWeb/wskdeploy"
     val deployActionURL = s"https://${wskprops.apihost}/api/v1/web${deployAction}.http"
@@ -63,23 +70,6 @@ class CloudantTests extends TestHelpers
     val swiftfolder = "../runtimes/swift/actions";
     val swiftkind = JsString("swift:3.1.1")
 
-    def makePostCallWithExpectedResult(params: JsObject, expectedResult: String, expectedCode: Int) = {
-      val response = RestAssured.given()
-          .contentType("application/json\r\n")
-          .config(RestAssured.config().sslConfig(new SSLConfig().relaxedHTTPSValidation()))
-          .body(params.toString())
-          .post(deployActionURL)
-      assert(response.statusCode() == expectedCode)
-      response.body.asString should include(expectedResult)
-      response.body.asString.parseJson.asJsObject.getFields("activationId") should have length 1
-    }
-
-    def verifyAction(action: RunResult, name: String, kindValue: JsString): Unit = {
-      val stdout = action.stdout
-      assert(stdout.startsWith(s"ok: got action $name\n"))
-      wsk.parseJsonString(stdout).fields("exec").asJsObject.fields("kind") shouldBe kindValue
-    }
-
     behavior of "Cloudant Trigger Template"
 
     // test to create the nodejs 8 cloudant trigger template from github url.  Will use preinstalled folder.
@@ -100,19 +90,39 @@ class CloudantTests extends TestHelpers
         "wskAuth" -> JsString(wskprops.authKey)
       ), successStatus, 200);
 
-      withActivation(wsk.activation, wsk.action.invoke(cloudantActionPackage)) {
-        _.response.result.get.toString should include("Please make sure name and color are passed in as params.")
-      }
-
+      // check that both actions were created and can be invoked with expected results
       withActivation(wsk.activation, wsk.action.invoke(fakeChangesAction, Map("message" -> "echo".toJson))) {
         _.response.result.get.toString should include("echo")
       }
 
+      withActivation(wsk.activation, wsk.action.invoke(cloudantAction)) {
+        _.response.result.get.toString should include("Please make sure name and color are passed in as params.")
+      }
+
+      // confirm trigger exists
+      val triggers = wsk.trigger.list()
+      verifyTriggerList(triggers, "myTrigger");
+
+      // confirm rule exists
+      val rules = wsk.rule.list()
+      verifyRuleList(rules, "myRule")
+
+      // check that sequence was created and is invoked with expected results
+      val runSequence = wsk.action.invoke(cloudantSequence, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
+      withActivation(wsk.activation, runSequence, totalWait = 2 * allowedActionDuration) { activation =>
+        checkSequenceLogs(activation, 2)
+        activation.response.result.get.toString should include("A Red cat named Kat was added")
+      }
+
       val action = wsk.action.get("myPackage/process-change")
-      verifyAction(action, cloudantActionPackage, nodejs8kind)
+      verifyAction(action, cloudantAction, nodejs8kind)
 
       // clean up after test
-      wsk.action.delete(cloudantActionPackage)
+      wsk.action.delete("myPackage/process-change")
+      wsk.action.delete("myPackage/process-change-cloudant-sequence")
+      wsk.pkg.delete("myPackage")
+      wsk.trigger.delete("myTrigger")
+      wsk.rule.delete("myRule")
     }
 
     // test to create the nodejs 6 cloudant trigger template from github url.  Will use preinstalled folder.
@@ -133,19 +143,39 @@ class CloudantTests extends TestHelpers
         "wskAuth" -> JsString(wskprops.authKey)
       ), successStatus, 200);
 
-      withActivation(wsk.activation, wsk.action.invoke(cloudantActionPackage)) {
-        _.response.result.get.toString should include("Please make sure name and color are passed in as params.")
-      }
-
+      // check that both actions were created and can be invoked with expected results
       withActivation(wsk.activation, wsk.action.invoke(fakeChangesAction, Map("message" -> "echo".toJson))) {
         _.response.result.get.toString should include("echo")
       }
 
+      withActivation(wsk.activation, wsk.action.invoke(cloudantAction)) {
+        _.response.result.get.toString should include("Please make sure name and color are passed in as params.")
+      }
+
+      // confirm trigger exists
+      val triggers = wsk.trigger.list()
+      verifyTriggerList(triggers, "myTrigger");
+
+      // confirm rule exists
+      val rules = wsk.rule.list()
+      verifyRuleList(rules, "myRule")
+
+      // check that sequence was created and is invoked with expected results
+      val runSequence = wsk.action.invoke(cloudantSequence, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
+      withActivation(wsk.activation, runSequence, totalWait = 2 * allowedActionDuration) { activation =>
+        checkSequenceLogs(activation, 2)
+        activation.response.result.get.toString should include("A Red cat named Kat was added")
+      }
+
       val action = wsk.action.get("myPackage/process-change")
-      verifyAction(action, cloudantActionPackage, nodejs6kind)
+      verifyAction(action, cloudantAction, nodejs6kind)
 
       // clean up after test
-      wsk.action.delete(cloudantActionPackage)
+      wsk.action.delete("myPackage/process-change")
+      wsk.action.delete("myPackage/process-change-cloudant-sequence")
+      wsk.pkg.delete("myPackage")
+      wsk.trigger.delete("myTrigger")
+      wsk.rule.delete("myRule")
     }
 
     // test to create the php cloudant trigger template from github url.  Will use preinstalled folder.
@@ -166,19 +196,39 @@ class CloudantTests extends TestHelpers
         "wskAuth" -> JsString(wskprops.authKey)
       ), successStatus, 200);
 
-      withActivation(wsk.activation, wsk.action.invoke(cloudantActionPackage)) {
-        _.response.result.get.toString should include("Please make sure name and color are passed in as params.")
-      }
-
+      // check that both actions were created and can be invoked with expected results
       withActivation(wsk.activation, wsk.action.invoke(fakeChangesAction, Map("message" -> "echo".toJson))) {
         _.response.result.get.toString should include("echo")
       }
 
+      withActivation(wsk.activation, wsk.action.invoke(cloudantAction)) {
+        _.response.result.get.toString should include("Please make sure name and color are passed in as params.")
+      }
+
+      // confirm trigger exists
+      val triggers = wsk.trigger.list()
+      verifyTriggerList(triggers, "myTrigger");
+
+      // confirm rule exists
+      val rules = wsk.rule.list()
+      verifyRuleList(rules, "myRule")
+
+      // check that sequence was created and is invoked with expected results
+      val runSequence = wsk.action.invoke(cloudantSequence, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
+      withActivation(wsk.activation, runSequence, totalWait = 2 * allowedActionDuration) { activation =>
+        checkSequenceLogs(activation, 2)
+        activation.response.result.get.toString should include("A Red cat named Kat was added")
+      }
+
       val action = wsk.action.get("myPackage/process-change")
-      verifyAction(action, cloudantActionPackage, phpkind)
+      verifyAction(action, cloudantAction, phpkind)
 
       // clean up after test
-      wsk.action.delete(cloudantActionPackage)
+      wsk.action.delete("myPackage/process-change")
+      wsk.action.delete("myPackage/process-change-cloudant-sequence")
+      wsk.pkg.delete("myPackage")
+      wsk.trigger.delete("myTrigger")
+      wsk.rule.delete("myRule")
     }
 
     // test to create the python cloudant trigger template from github url.  Will use preinstalled folder.
@@ -198,20 +248,39 @@ class CloudantTests extends TestHelpers
         "wskApiHost" -> JsString(wskprops.apihost),
         "wskAuth" -> JsString(wskprops.authKey)
       ), successStatus, 200);
-
-      withActivation(wsk.activation, wsk.action.invoke(cloudantActionPackage)) {
-        _.response.result.get.toString should include("Please make sure name and color are passed in as params.")
-      }
-
+      // check that both actions were created and can be invoked with expected results
       withActivation(wsk.activation, wsk.action.invoke(fakeChangesAction, Map("message" -> "echo".toJson))) {
         _.response.result.get.toString should include("echo")
       }
 
+      withActivation(wsk.activation, wsk.action.invoke(cloudantAction)) {
+        _.response.result.get.toString should include("Please make sure name and color are passed in as params.")
+      }
+
+      // confirm trigger exists
+      val triggers = wsk.trigger.list()
+      verifyTriggerList(triggers, "myTrigger");
+
+      // confirm rule exists
+      val rules = wsk.rule.list()
+      verifyRuleList(rules, "myRule")
+
+      // check that sequence was created and is invoked with expected results
+      val runSequence = wsk.action.invoke(cloudantSequence, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
+      withActivation(wsk.activation, runSequence, totalWait = 2 * allowedActionDuration) { activation =>
+        checkSequenceLogs(activation, 2)
+        activation.response.result.get.toString should include("A Red cat named Kat was added")
+      }
+
       val action = wsk.action.get("myPackage/process-change")
-      verifyAction(action, cloudantActionPackage, pythonkind)
+      verifyAction(action, cloudantAction, pythonkind)
 
       // clean up after test
-      wsk.action.delete(cloudantActionPackage)
+      wsk.action.delete("myPackage/process-change")
+      wsk.action.delete("myPackage/process-change-cloudant-sequence")
+      wsk.pkg.delete("myPackage")
+      wsk.trigger.delete("myTrigger")
+      wsk.rule.delete("myRule")
     }
 
     // test to create the swift cloudant trigger template from github url.  Will use preinstalled folder.
@@ -232,19 +301,39 @@ class CloudantTests extends TestHelpers
         "wskAuth" -> JsString(wskprops.authKey)
       ), successStatus, 200);
 
-      withActivation(wsk.activation, wsk.action.invoke(cloudantActionPackage)) {
-        _.response.result.get.toString should include("Please make sure name and color are passed in as params.")
-      }
-
+      // check that both actions were created and can be invoked with expected results
       withActivation(wsk.activation, wsk.action.invoke(fakeChangesAction, Map("message" -> "echo".toJson))) {
         _.response.result.get.toString should include("echo")
       }
 
+      withActivation(wsk.activation, wsk.action.invoke(cloudantAction)) {
+        _.response.result.get.toString should include("Please make sure name and color are passed in as params.")
+      }
+
+      // confirm trigger exists
+      val triggers = wsk.trigger.list()
+      verifyTriggerList(triggers, "myTrigger");
+
+      // confirm rule exists
+      val rules = wsk.rule.list()
+      verifyRuleList(rules, "myRule")
+
+      // check that sequence was created and is invoked with expected results
+      val runSequence = wsk.action.invoke(cloudantSequence, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
+      withActivation(wsk.activation, runSequence, totalWait = 2 * allowedActionDuration) { activation =>
+        checkSequenceLogs(activation, 2)
+        activation.response.result.get.toString should include("A Red cat named Kat was added")
+      }
+
       val action = wsk.action.get("myPackage/process-change")
-      verifyAction(action, cloudantActionPackage, swiftkind)
+      verifyAction(action, cloudantAction, swiftkind)
 
       // clean up after test
-      wsk.action.delete(cloudantActionPackage)
+      wsk.action.delete("myPackage/process-change")
+      wsk.action.delete("myPackage/process-change-cloudant-sequence")
+      wsk.pkg.delete("myPackage")
+      wsk.trigger.delete("myTrigger")
+      wsk.rule.delete("myRule")
     }
 
     /**
@@ -413,5 +502,43 @@ class CloudantTests extends TestHelpers
         activation.response.success shouldBe false
         activation.response.result.get.toString should include("Please make sure name and color are passed in as params.")
     }
+  }
+
+  /**
+   * checks logs for the activation of a sequence (length/size and ids)
+   */
+  private def checkSequenceLogs(activation: ActivationResult, size: Int) = {
+    activation.logs shouldBe defined
+    // check that the logs are what they are supposed to be (activation ids)
+    activation.logs.get.size shouldBe (size) // the number of activations in this sequence
+  }
+
+  private def makePostCallWithExpectedResult(params: JsObject, expectedResult: String, expectedCode: Int) = {
+    val response = RestAssured.given()
+        .contentType("application/json\r\n")
+        .config(RestAssured.config().sslConfig(new SSLConfig().relaxedHTTPSValidation()))
+        .body(params.toString())
+        .post(deployActionURL)
+    assert(response.statusCode() == expectedCode)
+    response.body.asString should include(expectedResult)
+    response.body.asString.parseJson.asJsObject.getFields("activationId") should have length 1
+  }
+
+  private def verifyRuleList(ruleListResult: RunResult, ruleName: String) = {
+    val ruleList = ruleListResult.stdout
+    val listOutput = ruleList.lines
+    listOutput.find(_.contains(ruleName)).get should (include(ruleName) and include("active"))
+  }
+
+  private def verifyTriggerList(triggerListResult: RunResult, triggerName: String) = {
+    val triggerList = triggerListResult.stdout
+    val listOutput = triggerList.lines
+    listOutput.find(_.contains(triggerName)).get should include(triggerName)
+  }
+
+  private def verifyAction(action: RunResult, name: String, kindValue: JsString): Unit = {
+    val stdout = action.stdout
+    assert(stdout.startsWith(s"ok: got action $name\n"))
+    wsk.parseJsonString(stdout).fields("exec").asJsObject.fields("kind") shouldBe kindValue
   }
 }
