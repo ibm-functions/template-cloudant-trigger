@@ -348,10 +348,9 @@ class CloudantTests extends TestHelpers
        println(System.getProperty("user.dir"));
 
        val name = "cloudantNode"
-       val kind = Option("nodejs:8")
        val file = Some(new File(nodejs8folder, "process-change.js").toString());
        assetHelper.withCleaner(wsk.action, name) { (action, _) =>
-         action.create(name, file, kind)
+         action.create(name, file, kind = Some(nodejs8kind))
        }
 
        val params = Map("color" -> "Red", "name" -> "Kat").mapValues(_.toJson)
@@ -364,11 +363,10 @@ class CloudantTests extends TestHelpers
     it should "invoke nodejs 8 process-change.js without parameters and get an error" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
 
       val name = "cloudantNode"
-      val kind = Option("nodejs:8")
       val file = Some(new File(nodejs8folder, "process-change.js").toString());
 
       assetHelper.withCleaner(wsk.action, name) { (action, _) =>
-        action.create(name, file, kind)
+        action.create(name, file, kind = Some(nodejs8kind))
       }
 
       withActivation(wsk.activation, wsk.action.invoke(name)) {
@@ -386,7 +384,7 @@ class CloudantTests extends TestHelpers
        val name = "cloudantNode"
        val file = Some(new File(nodejs6folder, "process-change.js").toString());
        assetHelper.withCleaner(wsk.action, name) { (action, _) =>
-         action.create(name, file)
+         action.create(name, file, kind = Some(nodejs6kind))
        }
 
        val params = Map("color" -> "Red", "name" -> "Kat").mapValues(_.toJson)
@@ -402,7 +400,7 @@ class CloudantTests extends TestHelpers
       val file = Some(new File(nodejs6folder, "process-change.js").toString());
 
       assetHelper.withCleaner(wsk.action, name) { (action, _) =>
-        action.create(name, file)
+        action.create(name, file, kind = Some(nodejs6kind))
       }
 
       withActivation(wsk.activation, wsk.action.invoke(name)) {
@@ -420,7 +418,7 @@ class CloudantTests extends TestHelpers
     val name = "cloudantPython"
     val file = Some(new File(pythonfolder, "process-change.py").toString());
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
-      action.create(name, file)
+      action.create(name, file, kind = Some(pythonkind))
     }
 
     val params = Map("color" -> "Red", "name" -> "Kat").mapValues(_.toJson)
@@ -435,7 +433,7 @@ class CloudantTests extends TestHelpers
     val file = Some(new File(pythonfolder, "process-change.py").toString());
 
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
-      action.create(name, file)
+      action.create(name, file, kind = Some(pythonkind))
     }
 
     withActivation(wsk.activation, wsk.action.invoke(name)) {
@@ -453,7 +451,7 @@ class CloudantTests extends TestHelpers
     val name = "cloudantPhp"
     val file = Some(new File(phpfolder, "process-change.php").toString());
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
-      action.create(name, file)
+      action.create(name, file, kind = Some(phpkind))
     }
 
     val params = Map("color" -> "Red", "name" -> "Kat").mapValues(_.toJson)
@@ -468,7 +466,7 @@ class CloudantTests extends TestHelpers
     val file = Some(new File(phpfolder, "process-change.php").toString());
 
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
-      action.create(name, file)
+      action.create(name, file, kind = Some(phpkind))
     }
 
     withActivation(wsk.activation, wsk.action.invoke(name)) {
@@ -486,7 +484,7 @@ class CloudantTests extends TestHelpers
     val name = "cloudantSwift"
     val file = Some(new File(swiftfolder, "process-change.swift").toString());
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
-      action.create(name, file)
+      action.create(name, file, kind = Some(swiftkind))
     }
 
     val params = Map("color" -> "Red", "name" -> "Kat").mapValues(_.toJson)
@@ -501,7 +499,7 @@ class CloudantTests extends TestHelpers
     val file = Some(new File(swiftfolder, "process-change.swift").toString());
 
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
-      action.create(name, file)
+      action.create(name, file, kind = Some(swiftkind))
     }
 
     withActivation(wsk.activation, wsk.action.invoke(name)) {
