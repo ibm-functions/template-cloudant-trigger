@@ -130,7 +130,7 @@ class CloudantTests extends TestHelpers
     it should "create the nodejs 6 cloudant trigger action from github url" in {
       makePostCallWithExpectedResult(JsObject(
         "gitUrl" -> JsString(deployTestRepo),
-        "manifestPath" -> JsString(node8RuntimePath),
+        "manifestPath" -> JsString(node6RuntimePath),
         "envData" -> JsObject(
             "PACKAGE_NAME" -> JsString("myPackage"),
             "CLOUDANT_USERNAME" -> JsString("username"),
