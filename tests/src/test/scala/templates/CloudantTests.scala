@@ -82,17 +82,22 @@ class CloudantTests extends TestHelpers
 
   // test to create the nodejs 8 cloudant trigger template from github url.  Will use preinstalled folder.
   it should "create the nodejs 8 cloudant trigger action from github url" in {
+    // create unique asset names
+    val nodejs8Package = packageName + "nodejs8"
+    val nodejs8Trigger = triggerName + "nodejs8"
+    val nodejs8Rule = ruleName + "nodejs8"
+
     makePostCallWithExpectedResult(JsObject(
       "gitUrl" -> JsString(deployTestRepo),
       "manifestPath" -> JsString(node8RuntimePath),
       "envData" -> JsObject(
-        "PACKAGE_NAME" -> JsString(packageName),
+        "PACKAGE_NAME" -> JsString(nodejs8Package),
         "CLOUDANT_USERNAME" -> JsString("username"),
         "CLOUDANT_PASSWORD" -> JsString("password"),
         "CLOUDANT_DATABASE" -> JsString("database"),
         "CLOUDANT_HOSTNAME" -> JsString("hostname"),
-        "TRIGGER_NAME" -> JsString(triggerName),
-        "RULE_NAME" -> JsString(ruleName)
+        "TRIGGER_NAME" -> JsString(nodejs8Trigger),
+        "RULE_NAME" -> JsString(nodejs8Rule)
       ),
       "wskApiHost" -> JsString(wskprops.apihost),
       "wskAuth" -> JsString(wskprops.authKey)
@@ -109,8 +114,8 @@ class CloudantTests extends TestHelpers
 
     // confirm trigger exists
     val triggers = wsk.trigger.list()
-    verifyTriggerList(triggers, triggerName);
-    val triggerRun = wsk.trigger.fire(triggerName, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
+    verifyTriggerList(triggers, nodejs8Trigger);
+    val triggerRun = wsk.trigger.fire(nodejs8Trigger, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
 
     // confirm trigger will fire sequence with expected result
     withActivation(wsk.activation, triggerRun) { activation =>
@@ -123,7 +128,7 @@ class CloudantTests extends TestHelpers
 
     // confirm rule exists
     val rules = wsk.rule.list()
-    verifyRule(rules, ruleName, triggerName, cloudantSequence)
+    verifyRule(rules, nodejs8Rule, nodejs8Trigger, cloudantSequence)
 
     // check that sequence was created and is invoked with expected results
     val runSequence = wsk.action.invoke(cloudantSequence, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
@@ -139,24 +144,29 @@ class CloudantTests extends TestHelpers
     wsk.action.delete(cloudantAction)
     wsk.action.delete(cloudantSequence)
     wsk.pkg.delete(binding)
-    wsk.pkg.delete(packageName)
-    wsk.trigger.delete(triggerName)
-    wsk.rule.delete(ruleName)
+    wsk.pkg.delete(nodejs8Package)
+    wsk.trigger.delete(nodejs8Trigger)
+    wsk.rule.delete(nodejs8Rule)
   }
 
   // test to create the nodejs 6 cloudant trigger template from github url.  Will use preinstalled folder.
   it should "create the nodejs 6 cloudant trigger action from github url" in {
+    // create unique asset names
+    val nodejs6Package = packageName + "nodejs6"
+    val nodejs6Trigger = triggerName + "nodejs6"
+    val nodejs6Rule = ruleName + "nodejs6"
+
     makePostCallWithExpectedResult(JsObject(
       "gitUrl" -> JsString(deployTestRepo),
       "manifestPath" -> JsString(node6RuntimePath),
       "envData" -> JsObject(
-        "PACKAGE_NAME" -> JsString(packageName),
+        "PACKAGE_NAME" -> JsString(nodejs6Package),
         "CLOUDANT_USERNAME" -> JsString("username"),
         "CLOUDANT_PASSWORD" -> JsString("password"),
         "CLOUDANT_DATABASE" -> JsString("database"),
         "CLOUDANT_HOSTNAME" -> JsString("hostname"),
-        "TRIGGER_NAME" -> JsString(triggerName),
-        "RULE_NAME" -> JsString(ruleName)
+        "TRIGGER_NAME" -> JsString(nodejs6Trigger),
+        "RULE_NAME" -> JsString(nodejs6Rule)
       ),
       "wskApiHost" -> JsString(wskprops.apihost),
       "wskAuth" -> JsString(wskprops.authKey)
@@ -173,8 +183,8 @@ class CloudantTests extends TestHelpers
 
     // confirm trigger exists
     val triggers = wsk.trigger.list()
-    verifyTriggerList(triggers, triggerName);
-    val triggerRun = wsk.trigger.fire(triggerName, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
+    verifyTriggerList(triggers, nodejs6Trigger);
+    val triggerRun = wsk.trigger.fire(nodejs6Trigger, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
 
     // confirm trigger will fire sequence with expected result
     withActivation(wsk.activation, triggerRun) { activation =>
@@ -187,7 +197,7 @@ class CloudantTests extends TestHelpers
 
     // confirm rule exists
     val rules = wsk.rule.list()
-    verifyRule(rules, ruleName, triggerName, cloudantSequence)
+    verifyRule(rules, nodejs6Rule, nodejs6Trigger, cloudantSequence)
 
     // check that sequence was created and is invoked with expected results
     val runSequence = wsk.action.invoke(cloudantSequence, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
@@ -202,25 +212,30 @@ class CloudantTests extends TestHelpers
     // clean up after test
     wsk.action.delete(cloudantAction)
     wsk.action.delete(cloudantSequence)
-    wsk.pkg.delete(packageName)
+    wsk.pkg.delete(nodejs6Package)
     wsk.pkg.delete(binding)
-    wsk.trigger.delete(triggerName)
-    wsk.rule.delete(ruleName)
+    wsk.trigger.delete(nodejs6Trigger)
+    wsk.rule.delete(nodejs6Rule)
   }
 
   // test to create the php cloudant trigger template from github url.  Will use preinstalled folder.
   it should "create the php cloudant trigger action from github url" in {
+    // create unique asset names
+    val phpPackage = packageName + "php"
+    val phpTrigger = triggerName + "php"
+    val phpRule = ruleName + "php"
+
     makePostCallWithExpectedResult(JsObject(
       "gitUrl" -> JsString(deployTestRepo),
       "manifestPath" -> JsString(phpRuntimePath),
       "envData" -> JsObject(
-        "PACKAGE_NAME" -> JsString(packageName),
+        "PACKAGE_NAME" -> JsString(phpPackage),
         "CLOUDANT_USERNAME" -> JsString("username"),
         "CLOUDANT_PASSWORD" -> JsString("password"),
         "CLOUDANT_DATABASE" -> JsString("database"),
         "CLOUDANT_HOSTNAME" -> JsString("hostname"),
-        "TRIGGER_NAME" -> JsString(triggerName),
-        "RULE_NAME" -> JsString(ruleName)
+        "TRIGGER_NAME" -> JsString(phpTrigger),
+        "RULE_NAME" -> JsString(phpRule)
       ),
       "wskApiHost" -> JsString(wskprops.apihost),
       "wskAuth" -> JsString(wskprops.authKey)
@@ -237,8 +252,8 @@ class CloudantTests extends TestHelpers
 
     // confirm trigger exists
     val triggers = wsk.trigger.list()
-    verifyTriggerList(triggers, triggerName);
-    val triggerRun = wsk.trigger.fire(triggerName, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
+    verifyTriggerList(triggers, phpTrigger);
+    val triggerRun = wsk.trigger.fire(phpTrigger, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
 
     // confirm trigger will fire sequence with expected result
     withActivation(wsk.activation, triggerRun) { activation =>
@@ -251,7 +266,7 @@ class CloudantTests extends TestHelpers
 
     // confirm rule exists
     val rules = wsk.rule.list()
-    verifyRule(rules, ruleName, triggerName, cloudantSequence)
+    verifyRule(rules, phpRule, phpTrigger, cloudantSequence)
 
     // check that sequence was created and is invoked with expected results
     val runSequence = wsk.action.invoke(cloudantSequence, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
@@ -266,25 +281,30 @@ class CloudantTests extends TestHelpers
     // clean up after test
     wsk.action.delete(cloudantAction)
     wsk.action.delete(cloudantSequence)
-    wsk.pkg.delete(packageName)
+    wsk.pkg.delete(phpPackage)
     wsk.pkg.delete(binding)
-    wsk.trigger.delete(triggerName)
-    wsk.rule.delete(ruleName)
+    wsk.trigger.delete(phpTrigger)
+    wsk.rule.delete(phpRule)
   }
 
   // test to create the python cloudant trigger template from github url.  Will use preinstalled folder.
   it should "create the python cloudant trigger action from github url" in {
+    // create unique asset names
+    val pythonPackage = packageName + "python"
+    val pythonTrigger = triggerName + "python"
+    val pythonRule = ruleName + "python"
+
     makePostCallWithExpectedResult(JsObject(
       "gitUrl" -> JsString(deployTestRepo),
       "manifestPath" -> JsString(pythonRuntimePath),
       "envData" -> JsObject(
-        "PACKAGE_NAME" -> JsString(packageName),
+        "PACKAGE_NAME" -> JsString(pythonPackage),
         "CLOUDANT_USERNAME" -> JsString("username"),
         "CLOUDANT_PASSWORD" -> JsString("password"),
         "CLOUDANT_DATABASE" -> JsString("database"),
         "CLOUDANT_HOSTNAME" -> JsString("hostname"),
-        "TRIGGER_NAME" -> JsString(triggerName),
-        "RULE_NAME" -> JsString(ruleName)
+        "TRIGGER_NAME" -> JsString(pythonTrigger),
+        "RULE_NAME" -> JsString(pythonRule)
       ),
       "wskApiHost" -> JsString(wskprops.apihost),
       "wskAuth" -> JsString(wskprops.authKey)
@@ -300,8 +320,8 @@ class CloudantTests extends TestHelpers
 
     // confirm trigger exists
     val triggers = wsk.trigger.list()
-    verifyTriggerList(triggers, triggerName);
-    val triggerRun = wsk.trigger.fire(triggerName, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
+    verifyTriggerList(triggers, pythonTrigger);
+    val triggerRun = wsk.trigger.fire(pythonTrigger, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
 
     // confirm trigger will fire sequence with expected result
     withActivation(wsk.activation, triggerRun) { activation =>
@@ -314,7 +334,7 @@ class CloudantTests extends TestHelpers
 
     // confirm rule exists
     val rules = wsk.rule.list()
-    verifyRule(rules, ruleName, triggerName, cloudantSequence)
+    verifyRule(rules, pythonRule, pythonTrigger, cloudantSequence)
 
     // check that sequence was created and is invoked with expected results
     val runSequence = wsk.action.invoke(cloudantSequence, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
@@ -329,25 +349,30 @@ class CloudantTests extends TestHelpers
     // clean up after test
     wsk.action.delete(cloudantAction)
     wsk.action.delete(cloudantSequence)
-    wsk.pkg.delete(packageName)
+    wsk.pkg.delete(pythonPackage)
     wsk.pkg.delete(binding)
-    wsk.trigger.delete(triggerName)
-    wsk.rule.delete(ruleName)
+    wsk.trigger.delete(pythonTrigger)
+    wsk.rule.delete(pythonRule)
   }
 
   // test to create the swift cloudant trigger template from github url.  Will use preinstalled folder.
   it should "create the swift cloudant trigger action from github url" in {
+    // create unique asset names
+    val swiftPackage = packageName + "swift"
+    val swiftTrigger = triggerName + "swift"
+    val swiftRule = ruleName + "swift"
+
     makePostCallWithExpectedResult(JsObject(
       "gitUrl" -> JsString(deployTestRepo),
       "manifestPath" -> JsString(swiftRuntimePath),
       "envData" -> JsObject(
-        "PACKAGE_NAME" -> JsString(packageName),
+        "PACKAGE_NAME" -> JsString(swiftPackage),
         "CLOUDANT_USERNAME" -> JsString("username"),
         "CLOUDANT_PASSWORD" -> JsString("password"),
         "CLOUDANT_DATABASE" -> JsString("database"),
         "CLOUDANT_HOSTNAME" -> JsString("hostname"),
-        "TRIGGER_NAME" -> JsString(triggerName),
-        "RULE_NAME" -> JsString(ruleName)
+        "TRIGGER_NAME" -> JsString(swiftTrigger),
+        "RULE_NAME" -> JsString(swiftRule)
       ),
       "wskApiHost" -> JsString(wskprops.apihost),
       "wskAuth" -> JsString(wskprops.authKey)
@@ -364,8 +389,8 @@ class CloudantTests extends TestHelpers
 
     // confirm trigger exists
     val triggers = wsk.trigger.list()
-    verifyTriggerList(triggers, triggerName);
-    val triggerRun = wsk.trigger.fire(triggerName, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
+    verifyTriggerList(triggers, swiftTrigger);
+    val triggerRun = wsk.trigger.fire(swiftTrigger, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
 
     // confirm trigger will fire sequence with expected result
     withActivation(wsk.activation, triggerRun) { activation =>
@@ -378,7 +403,7 @@ class CloudantTests extends TestHelpers
 
     // confirm rule exists
     val rules = wsk.rule.list()
-    verifyRule(rules, ruleName, triggerName, cloudantSequence)
+    verifyRule(rules, swiftRule, swiftTrigger, cloudantSequence)
 
     // check that sequence was created and is invoked with expected results
     val runSequence = wsk.action.invoke(cloudantSequence, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
@@ -393,10 +418,10 @@ class CloudantTests extends TestHelpers
     // clean up after test
     wsk.action.delete(cloudantAction)
     wsk.action.delete(cloudantSequence)
-    wsk.pkg.delete(packageName)
+    wsk.pkg.delete(swiftPackage)
     wsk.pkg.delete(binding)
-    wsk.trigger.delete(triggerName)
-    wsk.rule.delete(ruleName)
+    wsk.trigger.delete(swiftTrigger)
+    wsk.rule.delete(swiftRule)
   }
 
   /**
