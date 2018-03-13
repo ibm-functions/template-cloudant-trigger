@@ -110,7 +110,7 @@ class CloudantTests extends TestHelpers
       _.response.result.get.toString should include("echo")
     }
 
-    withActivation(wsk.activation, wsk.action.invoke(cloudantAction)) {
+    withActivation(wsk.activation, wsk.action.invoke(nodejs8CloudantAction)) {
       _.response.result.get.toString should include("Please make sure name and color are passed in as params.")
     }
 
