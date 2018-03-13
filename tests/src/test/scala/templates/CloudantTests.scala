@@ -51,8 +51,8 @@ class CloudantTests extends TestHelpers
     """"status":"success""""
 
   val deployTestRepo = "https://github.com/ibm-functions/template-cloudant-trigger"
-  val cloudantAction = "myPackage/process-change"
-  val cloudantSequence = "myPackage/process-change-cloudant-sequence"
+  val cloudantAction = "process-change"
+  val cloudantSequence = "process-change-cloudant-sequence"
   val packageName = "myPackage"
   val ruleName = "myRule"
   val triggerName = "myTrigger"
@@ -86,6 +86,8 @@ class CloudantTests extends TestHelpers
     val nodejs8Package = packageName + "nodejs8"
     val nodejs8Trigger = triggerName + "nodejs8"
     val nodejs8Rule = ruleName + "nodejs8"
+    val nodejs8CloudantAction = nodejs8Package + "/" + cloudantAction
+    val nodejs8CloudantSequence = nodejs8Package + "/" + cloudantSequence
 
     makePostCallWithExpectedResult(JsObject(
       "gitUrl" -> JsString(deployTestRepo),
@@ -128,21 +130,21 @@ class CloudantTests extends TestHelpers
 
     // confirm rule exists
     val rules = wsk.rule.list()
-    verifyRule(rules, nodejs8Rule, nodejs8Trigger, cloudantSequence)
+    verifyRule(rules, nodejs8Rule, nodejs8Trigger, nodejs8CloudantSequence)
 
     // check that sequence was created and is invoked with expected results
-    val runSequence = wsk.action.invoke(cloudantSequence, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
+    val runSequence = wsk.action.invoke(nodejs8CloudantSequence, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
     withActivation(wsk.activation, runSequence, totalWait = 2 * allowedActionDuration) { activation =>
       checkSequenceLogs(activation, 2)
       activation.response.result.get.toString should include("A Red cat named Kat was added")
     }
 
-    val action = wsk.action.get(cloudantAction)
-    verifyAction(action, cloudantAction, JsString(nodejs8kind))
+    val action = wsk.action.get(nodejs8CloudantAction)
+    verifyAction(action, nodejs8CloudantAction, JsString(nodejs8kind))
 
     // clean up after test
-    wsk.action.delete(cloudantAction)
-    wsk.action.delete(cloudantSequence)
+    wsk.action.delete(nodejs8CloudantAction)
+    wsk.action.delete(nodejs8CloudantSequence)
     wsk.pkg.delete(binding)
     wsk.pkg.delete(nodejs8Package)
     wsk.trigger.delete(nodejs8Trigger)
@@ -155,6 +157,8 @@ class CloudantTests extends TestHelpers
     val nodejs6Package = packageName + "nodejs6"
     val nodejs6Trigger = triggerName + "nodejs6"
     val nodejs6Rule = ruleName + "nodejs6"
+    val nodejs6CloudantAction = nodejs6Package + "/" + cloudantAction
+    val nodejs6CloudantSequence = nodejs6Package + "/" + cloudantSequence
 
     makePostCallWithExpectedResult(JsObject(
       "gitUrl" -> JsString(deployTestRepo),
@@ -177,7 +181,7 @@ class CloudantTests extends TestHelpers
       _.response.result.get.toString should include("echo")
     }
 
-    withActivation(wsk.activation, wsk.action.invoke(cloudantAction)) {
+    withActivation(wsk.activation, wsk.action.invoke(nodejs6CloudantAction)) {
       _.response.result.get.toString should include("Please make sure name and color are passed in as params.")
     }
 
@@ -197,21 +201,21 @@ class CloudantTests extends TestHelpers
 
     // confirm rule exists
     val rules = wsk.rule.list()
-    verifyRule(rules, nodejs6Rule, nodejs6Trigger, cloudantSequence)
+    verifyRule(rules, nodejs6Rule, nodejs6Trigger, nodejs6CloudantSequence)
 
     // check that sequence was created and is invoked with expected results
-    val runSequence = wsk.action.invoke(cloudantSequence, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
+    val runSequence = wsk.action.invoke(nodejs6CloudantSequence, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
     withActivation(wsk.activation, runSequence, totalWait = 2 * allowedActionDuration) { activation =>
       checkSequenceLogs(activation, 2)
       activation.response.result.get.toString should include("A Red cat named Kat was added")
     }
 
-    val action = wsk.action.get(cloudantAction)
-    verifyAction(action, cloudantAction, JsString(nodejs6kind))
+    val action = wsk.action.get(nodejs6CloudantAction)
+    verifyAction(action, nodejs6CloudantAction, JsString(nodejs6kind))
 
     // clean up after test
-    wsk.action.delete(cloudantAction)
-    wsk.action.delete(cloudantSequence)
+    wsk.action.delete(nodejs6CloudantAction)
+    wsk.action.delete(nodejs6CloudantSequence)
     wsk.pkg.delete(nodejs6Package)
     wsk.pkg.delete(binding)
     wsk.trigger.delete(nodejs6Trigger)
@@ -224,6 +228,8 @@ class CloudantTests extends TestHelpers
     val phpPackage = packageName + "php"
     val phpTrigger = triggerName + "php"
     val phpRule = ruleName + "php"
+    val phpCloudantAction = phpPackage + "/" + cloudantAction
+    val phpCloudantSequence = phpPackage + "/" + cloudantSequence
 
     makePostCallWithExpectedResult(JsObject(
       "gitUrl" -> JsString(deployTestRepo),
@@ -246,7 +252,7 @@ class CloudantTests extends TestHelpers
       _.response.result.get.toString should include("echo")
     }
 
-    withActivation(wsk.activation, wsk.action.invoke(cloudantAction)) {
+    withActivation(wsk.activation, wsk.action.invoke(phpCloudantAction)) {
       _.response.result.get.toString should include("Please make sure name and color are passed in as params.")
     }
 
@@ -266,21 +272,21 @@ class CloudantTests extends TestHelpers
 
     // confirm rule exists
     val rules = wsk.rule.list()
-    verifyRule(rules, phpRule, phpTrigger, cloudantSequence)
+    verifyRule(rules, phpRule, phpTrigger, phpCloudantSequence)
 
     // check that sequence was created and is invoked with expected results
-    val runSequence = wsk.action.invoke(cloudantSequence, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
+    val runSequence = wsk.action.invoke(phpCloudantSequence, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
     withActivation(wsk.activation, runSequence, totalWait = 2 * allowedActionDuration) { activation =>
       checkSequenceLogs(activation, 2)
       activation.response.result.get.toString should include("A Red cat named Kat was added")
     }
 
-    val action = wsk.action.get(cloudantAction)
-    verifyAction(action, cloudantAction, JsString(phpkind))
+    val action = wsk.action.get(phpCloudantAction)
+    verifyAction(action, phpCloudantAction, JsString(phpkind))
 
     // clean up after test
-    wsk.action.delete(cloudantAction)
-    wsk.action.delete(cloudantSequence)
+    wsk.action.delete(phpCloudantAction)
+    wsk.action.delete(phpCloudantSequence)
     wsk.pkg.delete(phpPackage)
     wsk.pkg.delete(binding)
     wsk.trigger.delete(phpTrigger)
@@ -293,6 +299,8 @@ class CloudantTests extends TestHelpers
     val pythonPackage = packageName + "python"
     val pythonTrigger = triggerName + "python"
     val pythonRule = ruleName + "python"
+    val pythonCloudantAction = pythonPackage + "/" + cloudantAction
+    val pythonCloudantSequence = pythonPackage + "/" + cloudantSequence
 
     makePostCallWithExpectedResult(JsObject(
       "gitUrl" -> JsString(deployTestRepo),
@@ -314,7 +322,7 @@ class CloudantTests extends TestHelpers
       _.response.result.get.toString should include("echo")
     }
 
-    withActivation(wsk.activation, wsk.action.invoke(cloudantAction)) {
+    withActivation(wsk.activation, wsk.action.invoke(pythonCloudantAction)) {
       _.response.result.get.toString should include("Please make sure name and color are passed in as params.")
     }
 
@@ -334,21 +342,21 @@ class CloudantTests extends TestHelpers
 
     // confirm rule exists
     val rules = wsk.rule.list()
-    verifyRule(rules, pythonRule, pythonTrigger, cloudantSequence)
+    verifyRule(rules, pythonRule, pythonTrigger, pythonCloudantSequence)
 
     // check that sequence was created and is invoked with expected results
-    val runSequence = wsk.action.invoke(cloudantSequence, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
+    val runSequence = wsk.action.invoke(pythonCloudantSequence, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
     withActivation(wsk.activation, runSequence, totalWait = 2 * allowedActionDuration) { activation =>
       checkSequenceLogs(activation, 2)
       activation.response.result.get.toString should include("A Red cat named Kat was added")
     }
 
-    val action = wsk.action.get(cloudantAction)
-    verifyAction(action, cloudantAction, JsString(pythonkind))
+    val action = wsk.action.get(pythonCloudantAction)
+    verifyAction(action, pythonCloudantAction, JsString(pythonkind))
 
     // clean up after test
-    wsk.action.delete(cloudantAction)
-    wsk.action.delete(cloudantSequence)
+    wsk.action.delete(pythonCloudantAction)
+    wsk.action.delete(pythonCloudantSequence)
     wsk.pkg.delete(pythonPackage)
     wsk.pkg.delete(binding)
     wsk.trigger.delete(pythonTrigger)
@@ -361,6 +369,8 @@ class CloudantTests extends TestHelpers
     val swiftPackage = packageName + "swift"
     val swiftTrigger = triggerName + "swift"
     val swiftRule = ruleName + "swift"
+    val swiftCloudantAction = swiftPackage + "/" + cloudantAction
+    val swiftCloudantSequence = swiftPackage + "/" + cloudantSequence
 
     makePostCallWithExpectedResult(JsObject(
       "gitUrl" -> JsString(deployTestRepo),
@@ -383,7 +393,7 @@ class CloudantTests extends TestHelpers
       _.response.result.get.toString should include("echo")
     }
 
-    withActivation(wsk.activation, wsk.action.invoke(cloudantAction)) {
+    withActivation(wsk.activation, wsk.action.invoke(swiftCloudantAction)) {
       _.response.result.get.toString should include("Please make sure name and color are passed in as params.")
     }
 
@@ -403,21 +413,21 @@ class CloudantTests extends TestHelpers
 
     // confirm rule exists
     val rules = wsk.rule.list()
-    verifyRule(rules, swiftRule, swiftTrigger, cloudantSequence)
+    verifyRule(rules, swiftRule, swiftTrigger, swiftCloudantSequence)
 
     // check that sequence was created and is invoked with expected results
-    val runSequence = wsk.action.invoke(cloudantSequence, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
+    val runSequence = wsk.action.invoke(swiftCloudantSequence, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
     withActivation(wsk.activation, runSequence, totalWait = 2 * allowedActionDuration) { activation =>
       checkSequenceLogs(activation, 2)
       activation.response.result.get.toString should include("A Red cat named Kat was added")
     }
 
-    val action = wsk.action.get(cloudantAction)
-    verifyAction(action, cloudantAction, JsString(swiftkind))
+    val action = wsk.action.get(swiftCloudantAction)
+    verifyAction(action, swiftCloudantAction, JsString(swiftkind))
 
     // clean up after test
-    wsk.action.delete(cloudantAction)
-    wsk.action.delete(cloudantSequence)
+    wsk.action.delete(swiftCloudantAction)
+    wsk.action.delete(swiftCloudantSequence)
     wsk.pkg.delete(swiftPackage)
     wsk.pkg.delete(binding)
     wsk.trigger.delete(swiftTrigger)
