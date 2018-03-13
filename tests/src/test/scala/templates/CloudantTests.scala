@@ -24,6 +24,8 @@ import org.scalatest.junit.JUnitRunner
 import common.{TestHelpers, Wsk, WskProps, WskTestHelpers}
 import java.io._
 import common.TestUtils.RunResult
+import common.rest.WskRest
+import common.rest.RestResult
 import common.ActivationResult
 import com.jayway.restassured.RestAssured
 import com.jayway.restassured.config.SSLConfig
@@ -41,6 +43,7 @@ class CloudantTests extends TestHelpers
 
   implicit val wskprops = WskProps()
   val wsk = new Wsk()
+  val wskRest: common.rest.WskRest = new WskRest
   val allowedActionDuration = 120 seconds
 
   // statuses for deployWeb
@@ -107,10 +110,20 @@ class CloudantTests extends TestHelpers
     // confirm trigger exists
     val triggers = wsk.trigger.list()
     verifyTriggerList(triggers, triggerName);
+    val triggerRun = wsk.trigger.fire(triggerName, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
+
+    // confirm trigger will fire sequence with expected result
+    withActivation(wsk.activation, triggerRun) { activation =>
+      val logEntry = activation.logs.get(0).parseJson.asJsObject
+      val triggerActivationId: String = logEntry.getFields("activationId")(0).convertTo[String]
+      withActivation(wsk.activation, triggerActivationId) { triggerActivation =>
+        triggerActivation.response.result.get.toString should include ("A Red cat named Kat was added");
+      }
+    }
 
     // confirm rule exists
     val rules = wsk.rule.list()
-    verifyRuleList(rules, ruleName)
+    verifyRule(rules, ruleName, triggerName, cloudantSequence)
 
     // check that sequence was created and is invoked with expected results
     val runSequence = wsk.action.invoke(cloudantSequence, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
@@ -161,10 +174,20 @@ class CloudantTests extends TestHelpers
     // confirm trigger exists
     val triggers = wsk.trigger.list()
     verifyTriggerList(triggers, triggerName);
+    val triggerRun = wsk.trigger.fire(triggerName, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
+
+    // confirm trigger will fire sequence with expected result
+    withActivation(wsk.activation, triggerRun) { activation =>
+      val logEntry = activation.logs.get(0).parseJson.asJsObject
+      val triggerActivationId: String = logEntry.getFields("activationId")(0).convertTo[String]
+      withActivation(wsk.activation, triggerActivationId) { triggerActivation =>
+        triggerActivation.response.result.get.toString should include ("A Red cat named Kat was added");
+      }
+    }
 
     // confirm rule exists
     val rules = wsk.rule.list()
-    verifyRuleList(rules, ruleName)
+    verifyRule(rules, ruleName, triggerName, cloudantSequence)
 
     // check that sequence was created and is invoked with expected results
     val runSequence = wsk.action.invoke(cloudantSequence, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
@@ -215,10 +238,20 @@ class CloudantTests extends TestHelpers
     // confirm trigger exists
     val triggers = wsk.trigger.list()
     verifyTriggerList(triggers, triggerName);
+    val triggerRun = wsk.trigger.fire(triggerName, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
+
+    // confirm trigger will fire sequence with expected result
+    withActivation(wsk.activation, triggerRun) { activation =>
+      val logEntry = activation.logs.get(0).parseJson.asJsObject
+      val triggerActivationId: String = logEntry.getFields("activationId")(0).convertTo[String]
+      withActivation(wsk.activation, triggerActivationId) { triggerActivation =>
+        triggerActivation.response.result.get.toString should include ("A Red cat named Kat was added");
+      }
+    }
 
     // confirm rule exists
     val rules = wsk.rule.list()
-    verifyRuleList(rules, ruleName)
+    verifyRule(rules, ruleName, triggerName, cloudantSequence)
 
     // check that sequence was created and is invoked with expected results
     val runSequence = wsk.action.invoke(cloudantSequence, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
@@ -268,10 +301,20 @@ class CloudantTests extends TestHelpers
     // confirm trigger exists
     val triggers = wsk.trigger.list()
     verifyTriggerList(triggers, triggerName);
+    val triggerRun = wsk.trigger.fire(triggerName, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
+
+    // confirm trigger will fire sequence with expected result
+    withActivation(wsk.activation, triggerRun) { activation =>
+      val logEntry = activation.logs.get(0).parseJson.asJsObject
+      val triggerActivationId: String = logEntry.getFields("activationId")(0).convertTo[String]
+      withActivation(wsk.activation, triggerActivationId) { triggerActivation =>
+        triggerActivation.response.result.get.toString should include ("A Red cat named Kat was added");
+      }
+    }
 
     // confirm rule exists
     val rules = wsk.rule.list()
-    verifyRuleList(rules, ruleName)
+    verifyRule(rules, ruleName, triggerName, cloudantSequence)
 
     // check that sequence was created and is invoked with expected results
     val runSequence = wsk.action.invoke(cloudantSequence, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
@@ -322,10 +365,20 @@ class CloudantTests extends TestHelpers
     // confirm trigger exists
     val triggers = wsk.trigger.list()
     verifyTriggerList(triggers, triggerName);
+    val triggerRun = wsk.trigger.fire(triggerName, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
+
+    // confirm trigger will fire sequence with expected result
+    withActivation(wsk.activation, triggerRun) { activation =>
+      val logEntry = activation.logs.get(0).parseJson.asJsObject
+      val triggerActivationId: String = logEntry.getFields("activationId")(0).convertTo[String]
+      withActivation(wsk.activation, triggerActivationId) { triggerActivation =>
+        triggerActivation.response.result.get.toString should include ("A Red cat named Kat was added");
+      }
+    }
 
     // confirm rule exists
     val rules = wsk.rule.list()
-    verifyRuleList(rules, ruleName)
+    verifyRule(rules, ruleName, triggerName, cloudantSequence)
 
     // check that sequence was created and is invoked with expected results
     val runSequence = wsk.action.invoke(cloudantSequence, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
@@ -514,9 +567,7 @@ class CloudantTests extends TestHelpers
     }
   }
 
-  /**
-    * checks logs for the activation of a sequence (length/size and ids)
-    */
+
   private def checkSequenceLogs(activation: ActivationResult, size: Int) = {
     activation.logs shouldBe defined
     // check that the logs are what they are supposed to be (activation ids)
@@ -534,10 +585,12 @@ class CloudantTests extends TestHelpers
     response.body.asString.parseJson.asJsObject.getFields("activationId") should have length 1
   }
 
-  private def verifyRuleList(ruleListResult: RunResult, ruleName: String) = {
-    val ruleList = ruleListResult.stdout
-    val listOutput = ruleList.lines
-    listOutput.find(_.contains(ruleName)).get should (include(ruleName) and include("active"))
+  private def verifyRule(ruleListResult: RunResult, ruleName: String, triggerName: String, actionName: String) = {
+    val actionNameWithNoPackage = actionName.split("/").last
+    val rule = wskRest.rule.get(ruleName)
+    rule.getField("name") shouldBe ruleName
+    RestResult.getField(rule.getFieldJsObject("trigger"), "name") shouldBe triggerName
+    RestResult.getField(rule.getFieldJsObject("action"), "name") shouldBe actionNameWithNoPackage
   }
 
   private def verifyTriggerList(triggerListResult: RunResult, triggerName: String) = {
