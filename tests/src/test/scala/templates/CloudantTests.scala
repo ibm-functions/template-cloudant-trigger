@@ -405,7 +405,7 @@ class CloudantTests extends TestHelpers
   it should "invoke nodejs 8 process-change.js and get the result" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
     println(System.getProperty("user.dir"));
 
-    val name = "cloudantNode"
+    val name = "cloudantNode8"
     val file = Some(new File(nodejs8folder, "process-change.js").toString());
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
       action.create(name, file, kind = Some(nodejs8kind))
@@ -420,7 +420,7 @@ class CloudantTests extends TestHelpers
 
   it should "invoke nodejs 8 process-change.js without parameters and get an error" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
 
-    val name = "cloudantNode"
+    val name = "cloudantNode8-2"
     val file = Some(new File(nodejs8folder, "process-change.js").toString());
 
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
@@ -439,7 +439,7 @@ class CloudantTests extends TestHelpers
   it should "invoke nodejs 6 process-change.js and get the result" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
     println(System.getProperty("user.dir"));
 
-    val name = "cloudantNode"
+    val name = "cloudantNode6"
     val file = Some(new File(nodejs6folder, "process-change.js").toString());
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
       action.create(name, file, kind = Some(nodejs6kind))
@@ -454,7 +454,7 @@ class CloudantTests extends TestHelpers
 
   it should "invoke nodejs 6 process-change.js without parameters and get an error" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
 
-    val name = "cloudantNode"
+    val name = "cloudantNode6-2"
     val file = Some(new File(nodejs6folder, "process-change.js").toString());
 
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
@@ -487,7 +487,7 @@ class CloudantTests extends TestHelpers
   }
   it should "invoke process-change.py without parameters and get an error" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
 
-    val name = "cloudantPython"
+    val name = "cloudantPython-2"
     val file = Some(new File(pythonfolder, "process-change.py").toString());
 
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
@@ -520,7 +520,7 @@ class CloudantTests extends TestHelpers
   }
   it should "invoke process-change.php without parameters and get an error" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
 
-    val name = "cloudantPhp"
+    val name = "cloudantPhp-2"
     val file = Some(new File(phpfolder, "process-change.php").toString());
 
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
@@ -553,7 +553,7 @@ class CloudantTests extends TestHelpers
   }
   it should "invoke process-change.swift without parameters and get an error" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
 
-    val name = "cloudantSwift"
+    val name = "cloudantSwift-2"
     val file = Some(new File(swiftfolder, "process-change.swift").toString());
 
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
