@@ -39,7 +39,7 @@ packages:
           # Creating action that is printing data which is written to the database
           process-change:
               function: actions/process-change.swift
-              runtime: swift:3.1.1
+              runtime: swift:4.1
       sequences:
           # Sequence named "process-change-cloudant-sequence"
           # Creating sequence to connect the cloudant "read" action with the "process-change" action

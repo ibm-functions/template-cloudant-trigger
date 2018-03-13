@@ -76,7 +76,7 @@ class CloudantTests extends TestHelpers
   val pythonkind = "python-jessie:3"
   val swiftRuntimePath = "runtimes/swift"
   val swiftfolder = "../runtimes/swift/actions";
-  val swiftkind = "swift:3.1.1"
+  val swiftkind = "swift:4.1"
 
   behavior of "Cloudant Trigger Template"
 
