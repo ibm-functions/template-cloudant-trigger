@@ -83,9 +83,10 @@ class CloudantTests extends TestHelpers
   // test to create the nodejs 8 cloudant trigger template from github url.  Will use preinstalled folder.
   it should "create the nodejs 8 cloudant trigger action from github url" in {
     // create unique asset names
-    val nodejs8Package = packageName + "nodejs8"
-    val nodejs8Trigger = triggerName + "nodejs8"
-    val nodejs8Rule = ruleName + "nodejs8"
+    val timestamp: String = System.currentTimeMillis.toString
+    val nodejs8Package = packageName + timestamp
+    val nodejs8Trigger = triggerName + timestamp
+    val nodejs8Rule = ruleName + timestamp
     val nodejs8CloudantAction = nodejs8Package + "/" + cloudantAction
     val nodejs8CloudantSequence = nodejs8Package + "/" + cloudantSequence
 
@@ -154,9 +155,10 @@ class CloudantTests extends TestHelpers
   // test to create the nodejs 6 cloudant trigger template from github url.  Will use preinstalled folder.
   it should "create the nodejs 6 cloudant trigger action from github url" in {
     // create unique asset names
-    val nodejs6Package = packageName + "nodejs6"
-    val nodejs6Trigger = triggerName + "nodejs6"
-    val nodejs6Rule = ruleName + "nodejs6"
+    val timestamp: String = System.currentTimeMillis.toString
+    val nodejs6Package = packageName + timestamp
+    val nodejs6Trigger = triggerName + timestamp
+    val nodejs6Rule = ruleName + timestamp
     val nodejs6CloudantAction = nodejs6Package + "/" + cloudantAction
     val nodejs6CloudantSequence = nodejs6Package + "/" + cloudantSequence
 
@@ -225,9 +227,10 @@ class CloudantTests extends TestHelpers
   // test to create the php cloudant trigger template from github url.  Will use preinstalled folder.
   it should "create the php cloudant trigger action from github url" in {
     // create unique asset names
-    val phpPackage = packageName + "php"
-    val phpTrigger = triggerName + "php"
-    val phpRule = ruleName + "php"
+    val timestamp: String = System.currentTimeMillis.toString
+    val phpPackage = packageName + timestamp
+    val phpTrigger = triggerName + timestamp
+    val phpRule = ruleName + timestamp
     val phpCloudantAction = phpPackage + "/" + cloudantAction
     val phpCloudantSequence = phpPackage + "/" + cloudantSequence
 
@@ -296,9 +299,10 @@ class CloudantTests extends TestHelpers
   // test to create the python cloudant trigger template from github url.  Will use preinstalled folder.
   it should "create the python cloudant trigger action from github url" in {
     // create unique asset names
-    val pythonPackage = packageName + "python"
-    val pythonTrigger = triggerName + "python"
-    val pythonRule = ruleName + "python"
+    val timestamp: String = System.currentTimeMillis.toString
+    val pythonPackage = packageName + timestamp
+    val pythonTrigger = triggerName + timestamp
+    val pythonRule = ruleName + timestamp
     val pythonCloudantAction = pythonPackage + "/" + cloudantAction
     val pythonCloudantSequence = pythonPackage + "/" + cloudantSequence
 
@@ -366,9 +370,10 @@ class CloudantTests extends TestHelpers
   // test to create the swift cloudant trigger template from github url.  Will use preinstalled folder.
   it should "create the swift cloudant trigger action from github url" in {
     // create unique asset names
-    val swiftPackage = packageName + "swift"
-    val swiftTrigger = triggerName + "swift"
-    val swiftRule = ruleName + "swift"
+    val timestamp: String = System.currentTimeMillis.toString
+    val swiftPackage = packageName + timestamp
+    val swiftTrigger = triggerName + timestamp
+    val swiftRule = ruleName + timestamp
     val swiftCloudantAction = swiftPackage + "/" + cloudantAction
     val swiftCloudantSequence = swiftPackage + "/" + cloudantSequence
 
@@ -439,8 +444,8 @@ class CloudantTests extends TestHelpers
     */
   it should "invoke nodejs 8 process-change.js and get the result" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
     println(System.getProperty("user.dir"));
-
-    val name = "cloudantNode8"
+    val timestamp: String = System.currentTimeMillis.toString
+    val name = "cloudantNode" + timestamp
     val file = Some(new File(nodejs8folder, "process-change.js").toString());
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
       action.create(name, file, kind = Some(nodejs8kind))
@@ -454,8 +459,8 @@ class CloudantTests extends TestHelpers
   }
 
   it should "invoke nodejs 8 process-change.js without parameters and get an error" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
-
-    val name = "cloudantNode8-2"
+    val timestamp: String = System.currentTimeMillis.toString
+    val name = "cloudantNode" + timestamp
     val file = Some(new File(nodejs8folder, "process-change.js").toString());
 
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
@@ -473,8 +478,8 @@ class CloudantTests extends TestHelpers
     */
   it should "invoke nodejs 6 process-change.js and get the result" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
     println(System.getProperty("user.dir"));
-
-    val name = "cloudantNode6"
+    val timestamp: String = System.currentTimeMillis.toString
+    val name = "cloudantNode6" + timestamp
     val file = Some(new File(nodejs6folder, "process-change.js").toString());
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
       action.create(name, file, kind = Some(nodejs6kind))
@@ -488,8 +493,8 @@ class CloudantTests extends TestHelpers
   }
 
   it should "invoke nodejs 6 process-change.js without parameters and get an error" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
-
-    val name = "cloudantNode6-2"
+    val timestamp: String = System.currentTimeMillis.toString
+    val name = "cloudantNode6" + timestamp
     val file = Some(new File(nodejs6folder, "process-change.js").toString());
 
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
@@ -507,8 +512,8 @@ class CloudantTests extends TestHelpers
     * Test the python "cloudant trigger" template
     */
   it should "invoke process-change.py and get the result" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
-
-    val name = "cloudantPython"
+    val timestamp: String = System.currentTimeMillis.toString
+    val name = "cloudantPython" + timestamp
     val file = Some(new File(pythonfolder, "process-change.py").toString());
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
       action.create(name, file, kind = Some(pythonkind))
@@ -521,8 +526,8 @@ class CloudantTests extends TestHelpers
     }
   }
   it should "invoke process-change.py without parameters and get an error" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
-
-    val name = "cloudantPython-2"
+    val timestamp: String = System.currentTimeMillis.toString
+    val name = "cloudantPython" + timestamp
     val file = Some(new File(pythonfolder, "process-change.py").toString());
 
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
@@ -540,8 +545,8 @@ class CloudantTests extends TestHelpers
     * Test the php "cloudant trigger" template
     */
   it should "invoke process-change.php and get the result" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
-
-    val name = "cloudantPhp"
+    val timestamp: String = System.currentTimeMillis.toString
+    val name = "cloudantPhp" + timestamp
     val file = Some(new File(phpfolder, "process-change.php").toString());
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
       action.create(name, file, kind = Some(phpkind))
@@ -554,8 +559,8 @@ class CloudantTests extends TestHelpers
     }
   }
   it should "invoke process-change.php without parameters and get an error" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
-
-    val name = "cloudantPhp-2"
+    val timestamp: String = System.currentTimeMillis.toString
+    val name = "cloudantPhp" + timestamp
     val file = Some(new File(phpfolder, "process-change.php").toString());
 
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
@@ -573,8 +578,8 @@ class CloudantTests extends TestHelpers
     * Test the swift "cloudant trigger" template
     */
   it should "invoke process-change.swift and get the result" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
-
-    val name = "cloudantSwift"
+    val timestamp: String = System.currentTimeMillis.toString
+    val name = "cloudantSwift" + timestamp
     val file = Some(new File(swiftfolder, "process-change.swift").toString());
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
       action.create(name, file, kind = Some(swiftkind))
@@ -587,8 +592,8 @@ class CloudantTests extends TestHelpers
     }
   }
   it should "invoke process-change.swift without parameters and get an error" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
-
-    val name = "cloudantSwift-2"
+    val timestamp: String = System.currentTimeMillis.toString
+    val name = "cloudantSwift" + timestamp
     val file = Some(new File(swiftfolder, "process-change.swift").toString());
 
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
@@ -601,7 +606,6 @@ class CloudantTests extends TestHelpers
         activation.response.result.get.toString should include("Please make sure name and color are passed in as params.")
     }
   }
-
 
   private def checkSequenceLogs(activation: ActivationResult, size: Int) = {
     activation.logs shouldBe defined
