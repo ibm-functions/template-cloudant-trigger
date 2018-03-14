@@ -9,6 +9,7 @@ repositories {
 }
 
 tasks.withType(Test) {
+    exclude '**/CloudantTests.class'
     testLogging {
         events "passed", "skipped", "failed"
         showStandardStreams = true
