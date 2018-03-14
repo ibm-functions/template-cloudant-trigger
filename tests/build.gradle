@@ -30,7 +30,6 @@ test {
     }
 }
 
-
 tasks.withType(ScalaCompile) {
     scalaCompileOptions.additionalParameters = gradle.scala.compileFlags
 }
