@@ -443,7 +443,6 @@ class CloudantTests extends TestHelpers
     * Test the nodejs 8 "cloudant trigger" template
     */
   it should "invoke nodejs 8 process-change.js and get the result" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
-    println(System.getProperty("user.dir"));
     val timestamp: String = System.currentTimeMillis.toString
     val name = "cloudantNode" + timestamp
     val file = Some(new File(nodejs8folder, "process-change.js").toString());
@@ -477,7 +476,6 @@ class CloudantTests extends TestHelpers
     * Test the nodejs 6 "cloudant trigger" template
     */
   it should "invoke nodejs 6 process-change.js and get the result" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
-    println(System.getProperty("user.dir"));
     val timestamp: String = System.currentTimeMillis.toString
     val name = "cloudantNode6" + timestamp
     val file = Some(new File(nodejs6folder, "process-change.js").toString());

@@ -67,4 +67,6 @@ $WSK_CLI action create /whisk.system/cloudant/read --copy /whisk.system/utils/ec
 
 # Test
 cd $ROOTDIR/template-cloudant-trigger
-./gradlew :tests:test
+
+# Run the cloudant tests for travis
+./gradlew tests:test -Dtest.single=CloudantTests
