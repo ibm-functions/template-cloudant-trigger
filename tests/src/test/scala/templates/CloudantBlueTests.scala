@@ -30,7 +30,6 @@ import spray.json.pimpAny
 import common.TestUtils.RunResult
 import common.rest.WskRest
 import common.rest.RestResult
-// import common.ActivationResult
 import com.jayway.restassured.RestAssured
 import com.jayway.restassured.config.SSLConfig
 import spray.json.DefaultJsonProtocol._
