@@ -645,7 +645,7 @@ class CloudantBlueTests extends TestHelpers
         action.create(name, file, kind = Some(nodejs8kind))
       }
 
-      var params = Map("color" -> "Red", "name" -> "Kat").mapValues(_.toJson)
+      val params = Map("color" -> "Red", "name" -> "Kat").mapValues(_.toJson)
 
       withActivation(wsk.activation, wsk.action.invoke(name, params)) {
         _.response.result.get.toString should include("A Red cat named Kat was added")
