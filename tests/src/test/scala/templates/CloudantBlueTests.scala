@@ -90,7 +90,7 @@ class CloudantBlueTests extends TestHelpers
     behavior of "Cloudant Trigger Template"
 
     // test to create the nodejs 8 cloudant trigger template from github url.  Will use preinstalled folder.
-    it should "create the nodejs 8 cloudant trigger action from github url" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
+    it should "create the nodejs 8 cloudant trigger template from github url" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
 
       // create unique asset names
       val timestamp: String = System.currentTimeMillis.toString
@@ -199,7 +199,7 @@ class CloudantBlueTests extends TestHelpers
     }
 
     // test to create the nodejs 6 cloudant trigger template from github url.  Will use preinstalled folder.
-    it should "create the nodejs 6 cloudant trigger action from github url" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
+    it should "create the nodejs 6 cloudant trigger template from github url" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
 
       // create unique asset names
       val timestamp: String = System.currentTimeMillis.toString
@@ -308,7 +308,7 @@ class CloudantBlueTests extends TestHelpers
     }
 
     // test to create the php cloudant trigger template from github url.  Will use preinstalled folder.
-    it should "create the php cloudant trigger action from github url" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
+    it should "create the php cloudant trigger template from github url" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
 
       // create unique asset names
       val timestamp: String = System.currentTimeMillis.toString
@@ -417,7 +417,7 @@ class CloudantBlueTests extends TestHelpers
     }
 
     // test to create the python cloudant trigger template from github url.  Will use preinstalled folder.
-    it should "create the python cloudant trigger action from github url" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
+    it should "create the python cloudant trigger template from github url" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
 
       // create unique asset names
       val timestamp: String = System.currentTimeMillis.toString
@@ -526,7 +526,7 @@ class CloudantBlueTests extends TestHelpers
     }
 
     // test to create the swift cloudant trigger template from github url.  Will use preinstalled folder.
-    it should "create the swift cloudant trigger action from github url" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
+    it should "create the swift cloudant trigger template from github url" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
 
       // create unique asset names
       val timestamp: String = System.currentTimeMillis.toString
