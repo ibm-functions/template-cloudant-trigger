@@ -63,19 +63,19 @@ class CloudantTests extends TestHelpers
 
   //set parameters for deploy tests
   val node8RuntimePath = "runtimes/nodejs"
-  val nodejs8folder = "../runtimes/nodejs/actions";
+  val nodejs8folder = "../runtimes/nodejs/actions"
   val nodejs8kind = "nodejs:8"
   val node6RuntimePath = "runtimes/nodejs-6"
-  val nodejs6folder = "../runtimes/nodejs-6/actions";
+  val nodejs6folder = "../runtimes/nodejs-6/actions"
   val nodejs6kind = "nodejs:6"
   val phpRuntimePath = "runtimes/php"
-  val phpfolder = "../runtimes/php/actions";
+  val phpfolder = "../runtimes/php/actions"
   val phpkind = "php:7.1"
   val pythonRuntimePath = "runtimes/python"
-  val pythonfolder = "../runtimes/python/actions";
+  val pythonfolder = "../runtimes/python/actions"
   val pythonkind = "python-jessie:3"
   val swiftRuntimePath = "runtimes/swift"
-  val swiftfolder = "../runtimes/swift/actions";
+  val swiftfolder = "../runtimes/swift/actions"
   val swiftkind = "swift:4.1"
 
   behavior of "Cloudant Trigger Template"
@@ -104,7 +104,7 @@ class CloudantTests extends TestHelpers
       ),
       "wskApiHost" -> JsString(wskprops.apihost),
       "wskAuth" -> JsString(wskprops.authKey)
-    ), successStatus, 200);
+    ), successStatus, 200)
 
     // check that both actions were created and can be invoked with expected results
     withActivation(wsk.activation, wsk.action.invoke(fakeChangesAction, Map("message" -> "echo".toJson))) {
@@ -117,7 +117,7 @@ class CloudantTests extends TestHelpers
 
     // confirm trigger exists
     val triggers = wsk.trigger.list()
-    verifyTriggerList(triggers, nodejs8Trigger);
+    verifyTriggerList(triggers, nodejs8Trigger)
     val triggerRun = wsk.trigger.fire(nodejs8Trigger, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
 
     // confirm trigger will fire sequence with expected result
@@ -125,7 +125,7 @@ class CloudantTests extends TestHelpers
       val logEntry = activation.logs.get(0).parseJson.asJsObject
       val triggerActivationId: String = logEntry.getFields("activationId")(0).convertTo[String]
       withActivation(wsk.activation, triggerActivationId) { triggerActivation =>
-        triggerActivation.response.result.get.toString should include ("A Red cat named Kat was added");
+        triggerActivation.response.result.get.toString should include ("A Red cat named Kat was added")
       }
     }
 
@@ -176,7 +176,7 @@ class CloudantTests extends TestHelpers
       ),
       "wskApiHost" -> JsString(wskprops.apihost),
       "wskAuth" -> JsString(wskprops.authKey)
-    ), successStatus, 200);
+    ), successStatus, 200)
 
     // check that both actions were created and can be invoked with expected results
     withActivation(wsk.activation, wsk.action.invoke(fakeChangesAction, Map("message" -> "echo".toJson))) {
@@ -189,7 +189,7 @@ class CloudantTests extends TestHelpers
 
     // confirm trigger exists
     val triggers = wsk.trigger.list()
-    verifyTriggerList(triggers, nodejs6Trigger);
+    verifyTriggerList(triggers, nodejs6Trigger)
     val triggerRun = wsk.trigger.fire(nodejs6Trigger, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
 
     // confirm trigger will fire sequence with expected result
@@ -197,7 +197,7 @@ class CloudantTests extends TestHelpers
       val logEntry = activation.logs.get(0).parseJson.asJsObject
       val triggerActivationId: String = logEntry.getFields("activationId")(0).convertTo[String]
       withActivation(wsk.activation, triggerActivationId) { triggerActivation =>
-        triggerActivation.response.result.get.toString should include ("A Red cat named Kat was added");
+        triggerActivation.response.result.get.toString should include ("A Red cat named Kat was added")
       }
     }
 
@@ -248,7 +248,7 @@ class CloudantTests extends TestHelpers
       ),
       "wskApiHost" -> JsString(wskprops.apihost),
       "wskAuth" -> JsString(wskprops.authKey)
-    ), successStatus, 200);
+    ), successStatus, 200)
 
     // check that both actions were created and can be invoked with expected results
     withActivation(wsk.activation, wsk.action.invoke(fakeChangesAction, Map("message" -> "echo".toJson))) {
@@ -261,7 +261,7 @@ class CloudantTests extends TestHelpers
 
     // confirm trigger exists
     val triggers = wsk.trigger.list()
-    verifyTriggerList(triggers, phpTrigger);
+    verifyTriggerList(triggers, phpTrigger)
     val triggerRun = wsk.trigger.fire(phpTrigger, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
 
     // confirm trigger will fire sequence with expected result
@@ -269,7 +269,7 @@ class CloudantTests extends TestHelpers
       val logEntry = activation.logs.get(0).parseJson.asJsObject
       val triggerActivationId: String = logEntry.getFields("activationId")(0).convertTo[String]
       withActivation(wsk.activation, triggerActivationId) { triggerActivation =>
-        triggerActivation.response.result.get.toString should include ("A Red cat named Kat was added");
+        triggerActivation.response.result.get.toString should include ("A Red cat named Kat was added")
       }
     }
 
@@ -320,7 +320,7 @@ class CloudantTests extends TestHelpers
       ),
       "wskApiHost" -> JsString(wskprops.apihost),
       "wskAuth" -> JsString(wskprops.authKey)
-    ), successStatus, 200);
+    ), successStatus, 200)
     // check that both actions were created and can be invoked with expected results
     withActivation(wsk.activation, wsk.action.invoke(fakeChangesAction, Map("message" -> "echo".toJson))) {
       _.response.result.get.toString should include("echo")
@@ -332,7 +332,7 @@ class CloudantTests extends TestHelpers
 
     // confirm trigger exists
     val triggers = wsk.trigger.list()
-    verifyTriggerList(triggers, pythonTrigger);
+    verifyTriggerList(triggers, pythonTrigger)
     val triggerRun = wsk.trigger.fire(pythonTrigger, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
 
     // confirm trigger will fire sequence with expected result
@@ -340,7 +340,7 @@ class CloudantTests extends TestHelpers
       val logEntry = activation.logs.get(0).parseJson.asJsObject
       val triggerActivationId: String = logEntry.getFields("activationId")(0).convertTo[String]
       withActivation(wsk.activation, triggerActivationId) { triggerActivation =>
-        triggerActivation.response.result.get.toString should include ("A Red cat named Kat was added");
+        triggerActivation.response.result.get.toString should include ("A Red cat named Kat was added")
       }
     }
 
@@ -391,7 +391,7 @@ class CloudantTests extends TestHelpers
       ),
       "wskApiHost" -> JsString(wskprops.apihost),
       "wskAuth" -> JsString(wskprops.authKey)
-    ), successStatus, 200);
+    ), successStatus, 200)
 
     // check that both actions were created and can be invoked with expected results
     withActivation(wsk.activation, wsk.action.invoke(fakeChangesAction, Map("message" -> "echo".toJson))) {
@@ -404,7 +404,7 @@ class CloudantTests extends TestHelpers
 
     // confirm trigger exists
     val triggers = wsk.trigger.list()
-    verifyTriggerList(triggers, swiftTrigger);
+    verifyTriggerList(triggers, swiftTrigger)
     val triggerRun = wsk.trigger.fire(swiftTrigger, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
 
     // confirm trigger will fire sequence with expected result
@@ -412,7 +412,7 @@ class CloudantTests extends TestHelpers
       val logEntry = activation.logs.get(0).parseJson.asJsObject
       val triggerActivationId: String = logEntry.getFields("activationId")(0).convertTo[String]
       withActivation(wsk.activation, triggerActivationId) { triggerActivation =>
-        triggerActivation.response.result.get.toString should include ("A Red cat named Kat was added");
+        triggerActivation.response.result.get.toString should include ("A Red cat named Kat was added")
       }
     }
 
@@ -445,7 +445,7 @@ class CloudantTests extends TestHelpers
   it should "invoke nodejs 8 process-change.js and get the result" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
     val timestamp: String = System.currentTimeMillis.toString
     val name = "cloudantNode" + timestamp
-    val file = Some(new File(nodejs8folder, "process-change.js").toString());
+    val file = Some(new File(nodejs8folder, "process-change.js").toString())
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
       action.create(name, file, kind = Some(nodejs8kind))
     }
@@ -460,7 +460,7 @@ class CloudantTests extends TestHelpers
   it should "invoke nodejs 8 process-change.js without parameters and get an error" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
     val timestamp: String = System.currentTimeMillis.toString
     val name = "cloudantNode" + timestamp
-    val file = Some(new File(nodejs8folder, "process-change.js").toString());
+    val file = Some(new File(nodejs8folder, "process-change.js").toString())
 
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
       action.create(name, file, kind = Some(nodejs8kind))
@@ -478,7 +478,7 @@ class CloudantTests extends TestHelpers
   it should "invoke nodejs 6 process-change.js and get the result" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
     val timestamp: String = System.currentTimeMillis.toString
     val name = "cloudantNode6" + timestamp
-    val file = Some(new File(nodejs6folder, "process-change.js").toString());
+    val file = Some(new File(nodejs6folder, "process-change.js").toString())
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
       action.create(name, file, kind = Some(nodejs6kind))
     }
@@ -493,7 +493,7 @@ class CloudantTests extends TestHelpers
   it should "invoke nodejs 6 process-change.js without parameters and get an error" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
     val timestamp: String = System.currentTimeMillis.toString
     val name = "cloudantNode6" + timestamp
-    val file = Some(new File(nodejs6folder, "process-change.js").toString());
+    val file = Some(new File(nodejs6folder, "process-change.js").toString())
 
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
       action.create(name, file, kind = Some(nodejs6kind))
@@ -512,7 +512,7 @@ class CloudantTests extends TestHelpers
   it should "invoke process-change.py and get the result" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
     val timestamp: String = System.currentTimeMillis.toString
     val name = "cloudantPython" + timestamp
-    val file = Some(new File(pythonfolder, "process-change.py").toString());
+    val file = Some(new File(pythonfolder, "process-change.py").toString())
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
       action.create(name, file, kind = Some(pythonkind))
     }
@@ -526,7 +526,7 @@ class CloudantTests extends TestHelpers
   it should "invoke process-change.py without parameters and get an error" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
     val timestamp: String = System.currentTimeMillis.toString
     val name = "cloudantPython" + timestamp
-    val file = Some(new File(pythonfolder, "process-change.py").toString());
+    val file = Some(new File(pythonfolder, "process-change.py").toString())
 
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
       action.create(name, file, kind = Some(pythonkind))
@@ -545,7 +545,7 @@ class CloudantTests extends TestHelpers
   it should "invoke process-change.php and get the result" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
     val timestamp: String = System.currentTimeMillis.toString
     val name = "cloudantPhp" + timestamp
-    val file = Some(new File(phpfolder, "process-change.php").toString());
+    val file = Some(new File(phpfolder, "process-change.php").toString())
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
       action.create(name, file, kind = Some(phpkind))
     }
@@ -559,7 +559,7 @@ class CloudantTests extends TestHelpers
   it should "invoke process-change.php without parameters and get an error" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
     val timestamp: String = System.currentTimeMillis.toString
     val name = "cloudantPhp" + timestamp
-    val file = Some(new File(phpfolder, "process-change.php").toString());
+    val file = Some(new File(phpfolder, "process-change.php").toString())
 
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
       action.create(name, file, kind = Some(phpkind))
@@ -578,7 +578,7 @@ class CloudantTests extends TestHelpers
   it should "invoke process-change.swift and get the result" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
     val timestamp: String = System.currentTimeMillis.toString
     val name = "cloudantSwift" + timestamp
-    val file = Some(new File(swiftfolder, "process-change.swift").toString());
+    val file = Some(new File(swiftfolder, "process-change.swift").toString())
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
       action.create(name, file, kind = Some(swiftkind))
     }
@@ -592,7 +592,7 @@ class CloudantTests extends TestHelpers
   it should "invoke process-change.swift without parameters and get an error" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
     val timestamp: String = System.currentTimeMillis.toString
     val name = "cloudantSwift" + timestamp
-    val file = Some(new File(swiftfolder, "process-change.swift").toString());
+    val file = Some(new File(swiftfolder, "process-change.swift").toString())
 
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
       action.create(name, file, kind = Some(swiftkind))
