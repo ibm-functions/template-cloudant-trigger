@@ -24,9 +24,6 @@ import org.scalatest.junit.JUnitRunner
 import common.{TestHelpers, Wsk, WskProps, WskTestHelpers, TestUtils}
 import java.io._
 
-import spray.json.DefaultJsonProtocol.StringJsonFormat
-import spray.json.pimpAny
-
 import common.TestUtils.RunResult
 import common.rest.WskRest
 import common.rest.RestResult
