@@ -1,23 +1,27 @@
 #!/bin/bash
+set -ex
 
+# Build script for Travis-CI.
 SCRIPTDIR=$(cd $(dirname "$0") && pwd)
-HOMEDIR="$SCRIPTDIR/../../../"
-DEPLOYDIR="$HOMEDIR/openwhisk/catalog/extra-packages/packageDeploy"
+ROOTDIR="$SCRIPTDIR/../.."
+HOMEDIR="$ROOTDIR/../"
+WHISKDIR="$HOMEDIR/openwhisk"
 
-# clone utilties repo. in order to run scanCode.py
-cd $HOMEDIR
-git clone https://github.com/apache/incubator-openwhisk-utilities.git
+export OPENWHISK_HOME=${OPENWHISK_HOME:=$WHISKDIR}
+
+cd ${HOMEDIR}
 
 # shallow clone OpenWhisk repo.
-git clone --depth 1 https://github.com/apache/incubator-openwhisk.git openwhisk
+git clone --depth 1 https://github.com/apache/incubator-openwhisk.git ${OPENWHISK_HOME}
 
 # shallow clone deploy package repo.
-git clone --depth 1 https://github.com/apache/incubator-openwhisk-package-deploy $DEPLOYDIR
+git clone --depth 1 https://github.com/apache/incubator-openwhisk-package-deploy
 
-cd openwhisk
+# shallow clone of scancode
+git clone --depth 1 https://github.com/apache/incubator-openwhisk-utilities.git
 
 # use runtimes.json that defines python-jessie & IBM Node.js 8
-rm -f ansible/files/runtimes.json
-cp $HOMEDIR/template-cloudant-trigger/ansible/files/runtimes.json ansible/files/runtimes.json
+cp -f ${ROOTDIR}/ansible/files/runtimes.json ${WHISKDIR}/ansible/files/runtimes.json
 
+cd ${OPENWHISK_HOME}
 ./tools/travis/setup.sh
