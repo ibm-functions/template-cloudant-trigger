@@ -10,30 +10,30 @@
     {
       "name": "Node.js 8",
       "kind": "nodejs:8",
-      "type": "nodejs",
+      "type": "nodejs"
     },
     {
       "name": "Node.js 6",
       "kind": "nodejs:6",
-      "type": "nodejs-6",
+      "type": "nodejs-6"
     },
     {
       "name": "Swift 4.1",
       "kind": "swift:4.1",
-      "type": "swift",
+      "type": "swift"
     },
     {
-      "name": "Python 3.6.4",
-      "kind": "python-jessie:3",
-      "type": "python",
+      "name": "Python 3.7",
+      "kind": "python:3.7",
+      "type": "python"
     },
     {
-      "name": "PHP 7.1",
-      "kind": "php:7.1",
-      "type": "php",
-    },
+      "name": "PHP 7.2",
+      "kind": "php:7.2",
+      "type": "php"
+    }
   ],
   "categories": [
-    "cloudant",
+    "cloudant"
   ]
 }
