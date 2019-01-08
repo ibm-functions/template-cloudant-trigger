@@ -56,46 +56,43 @@ class CloudantTests extends TestHelpers with WskTestHelpers with BeforeAndAfterA
     s"https://${wskprops.apihost}/api/v1/web${deployAction}.http"
 
   //set parameters for deploy tests
-  val node8RuntimePath = "runtimes/nodejs"
-  val nodejs8folder = "runtimes/nodejs/actions"
-  val nodejs8kind = "nodejs:8"
-  val node6RuntimePath = "runtimes/nodejs-6"
-  val nodejs6folder = "runtimes/nodejs-6/actions"
-  val nodejs6kind = "nodejs:6"
+  val nodejsRuntimePath = "runtimes/nodejs"
+  val nodejsfolder = "runtimes/nodejs/actions"
+  val nodejskind = "nodejs:10"
   val phpRuntimePath = "runtimes/php"
   val phpfolder = "runtimes/php/actions"
-  val phpkind = "php:7.2"
+  val phpkind = "php:7.3"
   val pythonRuntimePath = "runtimes/python"
   val pythonfolder = "runtimes/python/actions"
   val pythonkind = "python:3.7"
   val swiftRuntimePath = "runtimes/swift"
   val swiftfolder = "runtimes/swift/actions"
-  val swiftkind = "swift:4.1"
+  val swiftkind = "swift:4.2"
 
   behavior of "Cloudant Trigger Template"
 
-  // test to create the nodejs 8 cloudant trigger template from github url.  Will use preinstalled folder.
-  it should "create the nodejs 8 cloudant trigger action from github url" in {
+  // test to create the nodejs 10 cloudant trigger template from github url.  Will use preinstalled folder.
+  it should "create the nodejs 10 cloudant trigger action from github url" in {
     // create unique asset names
     val timestamp: String = System.currentTimeMillis.toString
-    val nodejs8Package = packageName + timestamp
-    val nodejs8Trigger = triggerName + timestamp
-    val nodejs8Rule = ruleName + timestamp
-    val nodejs8CloudantAction = nodejs8Package + "/" + cloudantAction
-    val nodejs8CloudantSequence = nodejs8Package + "/" + cloudantSequence
+    val nodejsPackage = packageName + timestamp
+    val nodejsTrigger = triggerName + timestamp
+    val nodejsRule = ruleName + timestamp
+    val nodejsCloudantAction = nodejsPackage + "/" + cloudantAction
+    val nodejsCloudantSequence = nodejsPackage + "/" + cloudantSequence
 
     makePostCallWithExpectedResult(
       JsObject(
         "gitUrl" -> JsString(deployTestRepo),
-        "manifestPath" -> JsString(node8RuntimePath),
+        "manifestPath" -> JsString(nodejsRuntimePath),
         "envData" -> JsObject(
-          "PACKAGE_NAME" -> JsString(nodejs8Package),
+          "PACKAGE_NAME" -> JsString(nodejsPackage),
           "CLOUDANT_USERNAME" -> JsString("username"),
           "CLOUDANT_PASSWORD" -> JsString("password"),
           "CLOUDANT_DATABASE" -> JsString("database"),
           "CLOUDANT_HOSTNAME" -> JsString("hostname"),
-          "TRIGGER_NAME" -> JsString(nodejs8Trigger),
-          "RULE_NAME" -> JsString(nodejs8Rule)),
+          "TRIGGER_NAME" -> JsString(nodejsTrigger),
+          "RULE_NAME" -> JsString(nodejsRule)),
         "wskApiHost" -> JsString(wskprops.apihost),
         "wskAuth" -> JsString(wskprops.authKey)),
       successStatus,
@@ -106,15 +103,15 @@ class CloudantTests extends TestHelpers with WskTestHelpers with BeforeAndAfterA
       _.response.result.get.toString should include("echo")
     }
 
-    withActivation(wsk.activation, wsk.action.invoke(nodejs8CloudantAction)) {
+    withActivation(wsk.activation, wsk.action.invoke(nodejsCloudantAction)) {
       _.response.result.get.toString should include("Please make sure name and color are passed in as params.")
     }
 
     // confirm trigger exists
     val triggers = wsk.trigger.list()
-    verifyTriggerList(triggers, nodejs8Trigger)
+    verifyTriggerList(triggers, nodejsTrigger)
     val triggerRun =
-      wsk.trigger.fire(nodejs8Trigger, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
+      wsk.trigger.fire(nodejsTrigger, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
 
     // confirm trigger will fire sequence with expected result
     withActivation(wsk.activation, triggerRun) { activation =>
@@ -128,102 +125,26 @@ class CloudantTests extends TestHelpers with WskTestHelpers with BeforeAndAfterA
 
     // confirm rule exists
     val rules = wsk.rule.list()
-    verifyRule(rules, nodejs8Rule, nodejs8Trigger, nodejs8CloudantSequence)
+    verifyRule(rules, nodejsRule, nodejsTrigger, nodejsCloudantSequence)
 
     // check that sequence was created and is invoked with expected results
     val runSequence =
-      wsk.action.invoke(nodejs8CloudantSequence, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
+      wsk.action.invoke(nodejsCloudantSequence, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
     withActivation(wsk.activation, runSequence, totalWait = 2 * allowedActionDuration) { activation =>
       checkSequenceLogs(activation, 2)
       activation.response.result.get.toString should include("A Red cat named Kat was added")
     }
 
-    val action = wsk.action.get(nodejs8CloudantAction)
-    verifyAction(action, nodejs8CloudantAction, JsString(nodejs8kind))
+    val action = wsk.action.get(nodejsCloudantAction)
+    verifyAction(action, nodejsCloudantAction, JsString(nodejskind))
 
     // clean up after test
-    wsk.action.delete(nodejs8CloudantAction)
-    wsk.action.delete(nodejs8CloudantSequence)
+    wsk.action.delete(nodejsCloudantAction)
+    wsk.action.delete(nodejsCloudantSequence)
     wsk.pkg.delete(binding)
-    wsk.pkg.delete(nodejs8Package)
-    wsk.trigger.delete(nodejs8Trigger)
-    wsk.rule.delete(nodejs8Rule)
-  }
-
-  // test to create the nodejs 6 cloudant trigger template from github url.  Will use preinstalled folder.
-  it should "create the nodejs 6 cloudant trigger action from github url" in {
-    // create unique asset names
-    val timestamp: String = System.currentTimeMillis.toString
-    val nodejs6Package = packageName + timestamp
-    val nodejs6Trigger = triggerName + timestamp
-    val nodejs6Rule = ruleName + timestamp
-    val nodejs6CloudantAction = nodejs6Package + "/" + cloudantAction
-    val nodejs6CloudantSequence = nodejs6Package + "/" + cloudantSequence
-
-    makePostCallWithExpectedResult(
-      JsObject(
-        "gitUrl" -> JsString(deployTestRepo),
-        "manifestPath" -> JsString(node6RuntimePath),
-        "envData" -> JsObject(
-          "PACKAGE_NAME" -> JsString(nodejs6Package),
-          "CLOUDANT_USERNAME" -> JsString("username"),
-          "CLOUDANT_PASSWORD" -> JsString("password"),
-          "CLOUDANT_DATABASE" -> JsString("database"),
-          "CLOUDANT_HOSTNAME" -> JsString("hostname"),
-          "TRIGGER_NAME" -> JsString(nodejs6Trigger),
-          "RULE_NAME" -> JsString(nodejs6Rule)),
-        "wskApiHost" -> JsString(wskprops.apihost),
-        "wskAuth" -> JsString(wskprops.authKey)),
-      successStatus,
-      200)
-
-    // check that both actions were created and can be invoked with expected results
-    withActivation(wsk.activation, wsk.action.invoke(fakeChangesAction, Map("message" -> "echo".toJson))) {
-      _.response.result.get.toString should include("echo")
-    }
-
-    withActivation(wsk.activation, wsk.action.invoke(nodejs6CloudantAction)) {
-      _.response.result.get.toString should include("Please make sure name and color are passed in as params.")
-    }
-
-    // confirm trigger exists
-    val triggers = wsk.trigger.list()
-    verifyTriggerList(triggers, nodejs6Trigger)
-    val triggerRun =
-      wsk.trigger.fire(nodejs6Trigger, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
-
-    // confirm trigger will fire sequence with expected result
-    withActivation(wsk.activation, triggerRun) { activation =>
-      val logEntry = activation.logs.get(0).parseJson.asJsObject
-      val triggerActivationId: String =
-        logEntry.getFields("activationId")(0).convertTo[String]
-      withActivation(wsk.activation, triggerActivationId) { triggerActivation =>
-        triggerActivation.response.result.get.toString should include("A Red cat named Kat was added")
-      }
-    }
-
-    // confirm rule exists
-    val rules = wsk.rule.list()
-    verifyRule(rules, nodejs6Rule, nodejs6Trigger, nodejs6CloudantSequence)
-
-    // check that sequence was created and is invoked with expected results
-    val runSequence =
-      wsk.action.invoke(nodejs6CloudantSequence, Map("name" -> "Kat".toJson, "color" -> "Red".toJson))
-    withActivation(wsk.activation, runSequence, totalWait = 2 * allowedActionDuration) { activation =>
-      checkSequenceLogs(activation, 2)
-      activation.response.result.get.toString should include("A Red cat named Kat was added")
-    }
-
-    val action = wsk.action.get(nodejs6CloudantAction)
-    verifyAction(action, nodejs6CloudantAction, JsString(nodejs6kind))
-
-    // clean up after test
-    wsk.action.delete(nodejs6CloudantAction)
-    wsk.action.delete(nodejs6CloudantSequence)
-    wsk.pkg.delete(nodejs6Package)
-    wsk.pkg.delete(binding)
-    wsk.trigger.delete(nodejs6Trigger)
-    wsk.rule.delete(nodejs6Rule)
+    wsk.pkg.delete(nodejsPackage)
+    wsk.trigger.delete(nodejsTrigger)
+    wsk.rule.delete(nodejsRule)
   }
 
   // test to create the php cloudant trigger template from github url.  Will use preinstalled folder.
@@ -454,14 +375,14 @@ class CloudantTests extends TestHelpers with WskTestHelpers with BeforeAndAfterA
   }
 
   /**
-   * Test the nodejs 8 "cloudant trigger" template
+   * Test the nodejs 10 "cloudant trigger" template
    */
-  it should "invoke nodejs 8 process-change.js and get the result" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
+  it should "invoke nodejs 10 process-change.js and get the result" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
     val timestamp: String = System.currentTimeMillis.toString
     val name = "cloudantNode" + timestamp
-    val file = Some(new File(nodejs8folder, "process-change.js").toString())
+    val file = Some(new File(nodejsfolder, "process-change.js").toString())
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
-      action.create(name, file, kind = Some(nodejs8kind))
+      action.create(name, file, kind = Some(nodejskind))
     }
 
     val params = Map("color" -> "Red", "name" -> "Kat").mapValues(_.toJson)
@@ -471,49 +392,14 @@ class CloudantTests extends TestHelpers with WskTestHelpers with BeforeAndAfterA
     }
   }
 
-  it should "invoke nodejs 8 process-change.js without parameters and get an error" in withAssetCleaner(wskprops) {
+  it should "invoke nodejs 10 process-change.js without parameters and get an error" in withAssetCleaner(wskprops) {
     (wp, assetHelper) =>
       val timestamp: String = System.currentTimeMillis.toString
       val name = "cloudantNode" + timestamp
-      val file = Some(new File(nodejs8folder, "process-change.js").toString())
+      val file = Some(new File(nodejsfolder, "process-change.js").toString())
 
       assetHelper.withCleaner(wsk.action, name) { (action, _) =>
-        action.create(name, file, kind = Some(nodejs8kind))
-      }
-
-      withActivation(wsk.activation, wsk.action.invoke(name)) { activation =>
-        activation.response.success shouldBe false
-        activation.response.result.get.toString should include(
-          "Please make sure name and color are passed in as params.")
-      }
-  }
-
-  /**
-   * Test the nodejs 6 "cloudant trigger" template
-   */
-  it should "invoke nodejs 6 process-change.js and get the result" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
-    val timestamp: String = System.currentTimeMillis.toString
-    val name = "cloudantNode6" + timestamp
-    val file = Some(new File(nodejs6folder, "process-change.js").toString())
-    assetHelper.withCleaner(wsk.action, name) { (action, _) =>
-      action.create(name, file, kind = Some(nodejs6kind))
-    }
-
-    val params = Map("color" -> "Red", "name" -> "Kat").mapValues(_.toJson)
-
-    withActivation(wsk.activation, wsk.action.invoke(name, params)) {
-      _.response.result.get.toString should include("A Red cat named Kat was added")
-    }
-  }
-
-  it should "invoke nodejs 6 process-change.js without parameters and get an error" in withAssetCleaner(wskprops) {
-    (wp, assetHelper) =>
-      val timestamp: String = System.currentTimeMillis.toString
-      val name = "cloudantNode6" + timestamp
-      val file = Some(new File(nodejs6folder, "process-change.js").toString())
-
-      assetHelper.withCleaner(wsk.action, name) { (action, _) =>
-        action.create(name, file, kind = Some(nodejs6kind))
+        action.create(name, file, kind = Some(nodejskind))
       }
 
       withActivation(wsk.activation, wsk.action.invoke(name)) { activation =>
