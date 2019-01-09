@@ -58,21 +58,18 @@ class CloudantBlueTests extends TestHelpers with WskTestHelpers with BeforeAndAf
   val namespace = wsk.namespace.whois()
 
   //set parameters for deploy tests
-  val nodejs8RuntimePath = "runtimes/nodejs"
-  val nodejs8folder = "runtimes/nodejs/actions"
-  val nodejs8kind = "nodejs:8"
-  val nodejs6RuntimePath = "runtimes/nodejs-6"
-  val nodejs6folder = "runtimes/nodejs-6/actions"
-  val nodejs6kind = "nodejs:6"
+  val nodejsRuntimePath = "runtimes/nodejs"
+  val nodejsfolder = "runtimes/nodejs/actions"
+  val nodejskind = "nodejs:10"
   val phpRuntimePath = "runtimes/php"
   val phpfolder = "runtimes/php/actions"
-  val phpkind = "php:7.2"
+  val phpkind = "php:7.3"
   val pythonRuntimePath = "runtimes/python"
   val pythonfolder = "runtimes/python/actions"
   val pythonkind = "python:3.7"
   val swiftRuntimePath = "runtimes/swift"
   val swiftfolder = "runtimes/swift/actions"
-  val swiftkind = "swift:4.1"
+  val swiftkind = "swift:4.2"
 
   // connect to cloudant db for credentials and to create/destroy DBs
   val creds = TestUtils.getVCAPcredentials("cloudantNoSQLDB")
@@ -81,8 +78,8 @@ class CloudantBlueTests extends TestHelpers with WskTestHelpers with BeforeAndAf
 
   behavior of "Cloudant Trigger Template"
 
-  // test to create the nodejs 8 cloudant trigger template from github url.  Will use preinstalled folder.
-  it should "create the nodejs 8 cloudant trigger template from github url" in withAssetCleaner(wskprops) {
+  // test to create the nodejs 10 cloudant trigger template from github url.  Will use preinstalled folder.
+  it should "create the nodejs 10 cloudant trigger template from github url" in withAssetCleaner(wskprops) {
     (wp, assetHelper) =>
       // create unique asset names
       val timestamp: String = System.currentTimeMillis.toString
@@ -96,7 +93,7 @@ class CloudantBlueTests extends TestHelpers with WskTestHelpers with BeforeAndAf
       val file = Some(new File(datdir, "cloudantUtils.js").toString())
       val dbName = dbNameBase + timestamp
       assetHelper.withCleaner(wsk.action, "cloudantUtils") { (action, _) =>
-        action.create("cloudantUtils", file, kind = Some(nodejs8kind))
+        action.create("cloudantUtils", file, kind = Some(nodejskind))
       }
       var params = Map(
         "username" -> JsString(creds.get("username")),
@@ -112,7 +109,7 @@ class CloudantBlueTests extends TestHelpers with WskTestHelpers with BeforeAndAf
       makePostCallWithExpectedResult(
         JsObject(
           "gitUrl" -> JsString(deployTestRepo),
-          "manifestPath" -> JsString(nodejs8RuntimePath),
+          "manifestPath" -> JsString(nodejsRuntimePath),
           "envData" -> JsObject(
             "PACKAGE_NAME" -> JsString(nodejs8Package),
             "CLOUDANT_USERNAME" -> JsString(creds.get("username")),
@@ -163,7 +160,7 @@ class CloudantBlueTests extends TestHelpers with WskTestHelpers with BeforeAndAf
 
       // verify action exists as correct kind
       val action = wsk.action.get(nodejs8CloudantAction)
-      verifyAction(action, nodejs8CloudantAction, JsString(nodejs8kind))
+      verifyAction(action, nodejs8CloudantAction, JsString(nodejskind))
 
       // clean up after test
       // destroy db that was created for this test
@@ -185,110 +182,6 @@ class CloudantBlueTests extends TestHelpers with WskTestHelpers with BeforeAndAf
       wsk.rule.delete(nodejs8Rule)
   }
 
-  // test to create the nodejs 6 cloudant trigger template from github url.  Will use preinstalled folder.
-  it should "create the nodejs 6 cloudant trigger template from github url" in withAssetCleaner(wskprops) {
-    (wp, assetHelper) =>
-      // create unique asset names
-      val timestamp: String = System.currentTimeMillis.toString
-      val nodejs6Package = packageName + timestamp
-      val nodejs6Trigger = triggerName + timestamp
-      val nodejs6Rule = ruleName + timestamp
-      val nodejs6CloudantAction = nodejs6Package + "/" + cloudantAction
-      val nodejs6CloudantSequence = nodejs6Package + "/" + cloudantSequence
-
-      // action created from file to create or destroy cloudant db
-      val file = Some(new File(datdir, "cloudantUtils.js").toString())
-      val dbName = dbNameBase + timestamp
-      assetHelper.withCleaner(wsk.action, "cloudantUtils") { (action, _) =>
-        action.create("cloudantUtils", file, kind = Some(nodejs8kind))
-      }
-      var params = Map(
-        "username" -> JsString(creds.get("username")),
-        "password" -> JsString(creds.get("password")),
-        "dbName" -> JsString(dbName),
-        "create" -> JsString("create"))
-
-      withActivation(wsk.activation, wsk.action.invoke("cloudantUtils", params)) {
-        _.response.result.get.toString should include(""""ok":true""")
-      }
-
-      // post call to deploy package to test deploy of manifest
-      makePostCallWithExpectedResult(
-        JsObject(
-          "gitUrl" -> JsString(deployTestRepo),
-          "manifestPath" -> JsString(nodejs6RuntimePath),
-          "envData" -> JsObject(
-            "PACKAGE_NAME" -> JsString(nodejs6Package),
-            "CLOUDANT_USERNAME" -> JsString(creds.get("username")),
-            "CLOUDANT_PASSWORD" -> JsString(creds.get("password")),
-            "CLOUDANT_DATABASE" -> JsString(dbName),
-            "CLOUDANT_HOSTNAME" -> JsString(creds.get("host")),
-            "TRIGGER_NAME" -> JsString(nodejs6Trigger),
-            "RULE_NAME" -> JsString(nodejs6Rule)),
-          "wskApiHost" -> JsString(wskprops.apihost),
-          "wskAuth" -> JsString(wskprops.authKey)),
-        successStatus,
-        200)
-
-      // check that both actions were created and can be invoked
-      withActivation(wsk.activation, wsk.action.invoke(cloudantReadAction)) {
-        _.response.result.get.toString should include("dbname is required.")
-      }
-
-      withActivation(wsk.activation, wsk.action.invoke(nodejs6CloudantAction)) {
-        _.response.result.get.toString should include("Please make sure name and color are passed in as params.")
-      }
-
-      // confirm trigger exists
-      val triggers = wsk.trigger.list()
-      verifyTriggerList(triggers, nodejs6Trigger)
-
-      // confirm trigger will fire
-      val triggerRun = wsk.trigger.fire(nodejs6Trigger)
-      withActivation(wsk.activation, triggerRun) { activation =>
-        val logEntry = activation.logs.get(0).parseJson.asJsObject
-        val triggerActivationId: String =
-          logEntry.getFields("activationId")(0).convertTo[String]
-        withActivation(wsk.activation, triggerActivationId) { triggerActivation =>
-          triggerActivation.response.result.get.toString should include("dbname is required")
-        }
-      }
-
-      // confirm rule exists
-      val rules = wsk.rule.list()
-      verifyRule(rules, nodejs6Rule, nodejs6Trigger, nodejs6CloudantSequence)
-
-      // check that sequence was created and contains correct actions
-      val compValue = JsArray(
-        JsString("/" + namespace + "/" + cloudantReadAction),
-        JsString("/" + namespace + "/" + nodejs6CloudantAction))
-      val sequence = wsk.action.get(nodejs6CloudantSequence)
-      verifyActionSequence(sequence, nodejs6CloudantSequence, compValue, JsString("sequence"))
-
-      // verify action exists as correct kind
-      val action = wsk.action.get(nodejs6CloudantAction)
-      verifyAction(action, nodejs6CloudantAction, JsString(nodejs6kind))
-
-      // clean up after test
-      // destroy db that was created for this test
-      params = Map(
-        "username" -> JsString(creds.get("username")),
-        "password" -> JsString(creds.get("password")),
-        "dbName" -> JsString(dbName),
-        "create" -> JsString("destroy"))
-
-      withActivation(wsk.activation, wsk.action.invoke("cloudantUtils", params)) {
-        _.response.result.get.toString should include(""""ok":true""")
-      }
-
-      wsk.action.delete(nodejs6CloudantAction)
-      wsk.action.delete(nodejs6CloudantSequence)
-      wsk.pkg.delete(binding)
-      wsk.pkg.delete(nodejs6Package)
-      wsk.trigger.delete(nodejs6Trigger)
-      wsk.rule.delete(nodejs6Rule)
-  }
-
   // test to create the php cloudant trigger template from github url.  Will use preinstalled folder.
   it should "create the php cloudant trigger template from github url" in withAssetCleaner(wskprops) {
     (wp, assetHelper) =>
@@ -304,7 +197,7 @@ class CloudantBlueTests extends TestHelpers with WskTestHelpers with BeforeAndAf
       val file = Some(new File(datdir, "cloudantUtils.js").toString())
       val dbName = dbNameBase + timestamp
       assetHelper.withCleaner(wsk.action, "cloudantUtils") { (action, _) =>
-        action.create("cloudantUtils", file, kind = Some(nodejs8kind))
+        action.create("cloudantUtils", file, kind = Some(nodejskind))
       }
       var params = Map(
         "username" -> JsString(creds.get("username")),
@@ -408,7 +301,7 @@ class CloudantBlueTests extends TestHelpers with WskTestHelpers with BeforeAndAf
       val file = Some(new File(datdir, "cloudantUtils.js").toString())
       val dbName = dbNameBase + timestamp
       assetHelper.withCleaner(wsk.action, "cloudantUtils") { (action, _) =>
-        action.create("cloudantUtils", file, kind = Some(nodejs8kind))
+        action.create("cloudantUtils", file, kind = Some(nodejskind))
       }
       var params = Map(
         "username" -> JsString(creds.get("username")),
@@ -512,7 +405,7 @@ class CloudantBlueTests extends TestHelpers with WskTestHelpers with BeforeAndAf
       val file = Some(new File(datdir, "cloudantUtils.js").toString())
       val dbName = dbNameBase + timestamp
       assetHelper.withCleaner(wsk.action, "cloudantUtils") { (action, _) =>
-        action.create("cloudantUtils", file, kind = Some(nodejs8kind))
+        action.create("cloudantUtils", file, kind = Some(nodejskind))
       }
       var params = Map(
         "username" -> JsString(creds.get("username")),
@@ -602,14 +495,14 @@ class CloudantBlueTests extends TestHelpers with WskTestHelpers with BeforeAndAf
   }
 
   /**
-   * Test the nodejs 8 "cloudant trigger" template
+   * Test the nodejs 10 "cloudant trigger" template
    */
-  it should "invoke nodejs 8 process-change.js and get the result" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
+  it should "invoke nodejs 10 process-change.js and get the result" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
     val timestamp: String = System.currentTimeMillis.toString
     val name = "cloudantNode" + timestamp
-    val file = Some(new File(nodejs8folder, "process-change.js").toString())
+    val file = Some(new File(nodejsfolder, "process-change.js").toString())
     assetHelper.withCleaner(wsk.action, name) { (action, _) =>
-      action.create(name, file, kind = Some(nodejs8kind))
+      action.create(name, file, kind = Some(nodejskind))
     }
 
     val params = Map("color" -> "Red", "name" -> "Kat").mapValues(_.toJson)
@@ -619,49 +512,14 @@ class CloudantBlueTests extends TestHelpers with WskTestHelpers with BeforeAndAf
     }
   }
 
-  it should "invoke nodejs 8 process-change.js without parameters and get an error" in withAssetCleaner(wskprops) {
+  it should "invoke nodejs 10 process-change.js without parameters and get an error" in withAssetCleaner(wskprops) {
     (wp, assetHelper) =>
       val timestamp: String = System.currentTimeMillis.toString
       val name = "cloudantNode" + timestamp
-      val file = Some(new File(nodejs8folder, "process-change.js").toString())
+      val file = Some(new File(nodejsfolder, "process-change.js").toString())
 
       assetHelper.withCleaner(wsk.action, name) { (action, _) =>
-        action.create(name, file, kind = Some(nodejs8kind))
-      }
-
-      withActivation(wsk.activation, wsk.action.invoke(name)) { activation =>
-        activation.response.success shouldBe false
-        activation.response.result.get.toString should include(
-          "Please make sure name and color are passed in as params.")
-      }
-  }
-
-  /**
-   * Test the nodejs 6 "cloudant trigger" template
-   */
-  it should "invoke nodejs 6 process-change.js and get the result" in withAssetCleaner(wskprops) { (wp, assetHelper) =>
-    val timestamp: String = System.currentTimeMillis.toString
-    val name = "cloudantNode6" + timestamp
-    val file = Some(new File(nodejs6folder, "process-change.js").toString())
-    assetHelper.withCleaner(wsk.action, name) { (action, _) =>
-      action.create(name, file, kind = Some(nodejs6kind))
-    }
-
-    val params = Map("color" -> "Red", "name" -> "Kat").mapValues(_.toJson)
-
-    withActivation(wsk.activation, wsk.action.invoke(name, params)) {
-      _.response.result.get.toString should include("A Red cat named Kat was added")
-    }
-  }
-
-  it should "invoke nodejs 6 process-change.js without parameters and get an error" in withAssetCleaner(wskprops) {
-    (wp, assetHelper) =>
-      val timestamp: String = System.currentTimeMillis.toString
-      val name = "cloudantNode6" + timestamp
-      val file = Some(new File(nodejs6folder, "process-change.js").toString())
-
-      assetHelper.withCleaner(wsk.action, name) { (action, _) =>
-        action.create(name, file, kind = Some(nodejs6kind))
+        action.create(name, file, kind = Some(nodejskind))
       }
 
       withActivation(wsk.activation, wsk.action.invoke(name)) { activation =>
