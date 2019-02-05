@@ -20,7 +20,6 @@
 #   TRIGGER_NAME
 
 project:
-  namespace: _
   packages:
     $PACKAGE_NAME:
       dependencies:
@@ -31,6 +30,7 @@ project:
                   username: $CLOUDANT_USERNAME
                   password: $CLOUDANT_PASSWORD
                   host: $CLOUDANT_HOSTNAME
+                  iamApiKey: $CLOUDANT_IAM_APIKEY
       triggers:
           # Trigger
           # Creating trigger to fire events when data is inserted into database
