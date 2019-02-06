@@ -20,6 +20,7 @@
 #   TRIGGER_NAME
 
 project:
+  namespace: _
   packages:
     $PACKAGE_NAME:
       dependencies:
